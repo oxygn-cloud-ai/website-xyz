@@ -83,7 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      contents: read
     steps:
+      - uses: actions/checkout@v4
       - name: Close open CI failure issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
