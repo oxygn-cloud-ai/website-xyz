@@ -1,0 +1,97 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+
+  # CI failure auto-issue filing — all untrusted inputs pass through env
+  # vars and are written to files via python, never interpolated into shell.
+  notify-failure:
+    needs: [test]
+    if: failure() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect failure log
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          gh run view "$RUN_ID" --log-failed 2>&1 | tail -50 > /tmp/failed-log.txt || echo '(no log available)' > /tmp/failed-log.txt
+      - name: Build issue body
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          python3 <<'PY' > /tmp/issue-body.md
+          import os
+          run_url = os.environ['RUN_URL']
+          sha = os.environ['SHA']
+          actor = os.environ['ACTOR']
+          msg = os.environ.get('COMMIT_MSG', '')
+          with open('/tmp/failed-log.txt', 'r') as f:
+              log = f.read()
+          body = (
+              f"**Run:** {run_url}\n"
+              f"**Commit:** `{sha}`\n"
+              f"**Pushed by:** @{actor}\n"
+              f"**Message:** {msg}\n\n"
+              f"<details><summary>Last 50 lines of failed step log</summary>\n\n"
+              f"```\n{log}\n```\n\n"
+              f"</details>\n"
+          )
+          with open('/tmp/issue-body.md', 'w') as f:
+              f.write(body)
+          PY
+      - name: Open or update CI failure issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE='CI failure on main'
+          EXISTING=$(gh issue list --label ci-failure --state open --search "$TITLE in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file /tmp/issue-body.md
+          else
+            gh issue create --title "$TITLE" --label "ci-failure,P1,bug" --body-file /tmp/issue-body.md
+          fi
+
+  notify-recovery:
+    needs: [test]
+    if: success() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close open CI failure issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          EXISTING=$(gh issue list --label ci-failure --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            COMMENT="CI recovered on \`$SHA\` — $RUN_URL"
+            gh issue close "$EXISTING" --comment "$COMMENT"
+          fi
