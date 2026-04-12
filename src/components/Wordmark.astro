@@ -1,0 +1,31 @@
+---
+interface Props {
+  size?: string;
+  sup?: boolean;
+}
+const { size = '1rem', sup = true } = Astro.props;
+---
+<span class="wordmark" style={`font-size:${size}`}>
+  <span class="wordmark-main">oxygn</span>{sup && <sup class="wordmark-sup">ai</sup>}
+</span>
+
+<style>
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 200;
+    letter-spacing: -0.025em;
+    line-height: 0.9;
+    display: inline-flex;
+    align-items: flex-start;
+    color: var(--ink);
+  }
+  .wordmark-main { display: inline-block; }
+  .wordmark-sup {
+    font-size: 0.3em;
+    font-weight: 300;
+    line-height: 1;
+    margin-left: 0.1em;
+    letter-spacing: 0.02em;
+    transform: translateY(0.15em);
+  }
+</style>

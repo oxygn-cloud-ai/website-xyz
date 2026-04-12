@@ -1,19 +1,636 @@
 ---
-const title = 'Oxygn';
-const tagline = 'Company website placeholder — replace with real content.';
+import Base from '../layouts/Base.astro';
+import Wordmark from '../components/Wordmark.astro';
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={tagline} />
-    <title>{title}</title>
-  </head>
-  <body>
-    <main>
-      <h1>{title}</h1>
-      <p>{tagline}</p>
-    </main>
-  </body>
-</html>
+<Base
+  title="Oxygn — The cost of building collapsed. The cost of thinking didn't."
+  description="Oxygn is building the operating system for a world where a single person can run a billion-dollar company."
+>
+
+  <div class="breath" aria-hidden="true"></div>
+
+  <main class="shell">
+
+    <header class="topbar">
+      <a href="/" aria-label="Oxygn home" class="topbar-mark">
+        <Wordmark size="0.9rem" />
+      </a>
+      <span class="topbar-meta">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Manifesto</span>
+      </span>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 class="hero-title" id="hero-title">
+        <span class="hero-line">The cost of <em>building</em></span>
+        <span class="hero-line">collapsed to zero.</span>
+        <span class="hero-line">The cost of <em>thinking</em> didn&rsquo;t.</span>
+      </h1>
+      <div class="hero-foot">
+        <p class="hero-sub">
+          Oxygn is building the operating system for a world where a single
+          person can run a billion-dollar company.
+        </p>
+        <a class="hero-cue" href="#shift">
+          <span class="cue-bar" aria-hidden="true"></span>
+          <span>Read the manifesto</span>
+        </a>
+      </div>
+    </section>
+
+    <article class="act" id="shift">
+      <header class="act-head">
+        <span class="eyebrow">I &nbsp;·&nbsp; The shift</span>
+        <h2 class="act-title">
+          The bottleneck<br/>
+          moved from <em>execution</em><br/>
+          to <em>ideation</em>.
+        </h2>
+      </header>
+
+      <blockquote class="pull">
+        For two centuries, the hard part was making things. Now the hard part
+        is deciding what is worth making.
+      </blockquote>
+
+      <div class="prose">
+        <p>
+          Planning the factory, writing the code, onboarding the team —
+          these were the rate-limiters of value. They aren&rsquo;t any more.
+          The marginal cost of execution has fallen below the marginal cost
+          of a good idea.
+        </p>
+        <p>
+          Knowledge workers stop being builders and become <em>ideators</em>.
+          Their output is taste: which ideas to test, which to kill, which
+          to ship. Everything downstream is automation.
+        </p>
+        <p>
+          Human creativity has not become less valuable. It has become the
+          only remaining constraint.
+        </p>
+      </div>
+    </article>
+
+    <article class="act">
+      <header class="act-head">
+        <span class="eyebrow">II &nbsp;·&nbsp; The company</span>
+        <h2 class="act-title">
+          The company<br/>
+          as <em>prompt library</em>,<br/>
+          run by <em>one person</em>.
+        </h2>
+      </header>
+
+      <blockquote class="pull">
+        The org chart replaced by an ever-evolving library of prompts, and a
+        single curator with taste.
+      </blockquote>
+
+      <div class="prose">
+        <p>
+          A traditional company is a structure of people executing processes.
+          A post-AI company is a network of prompts that execute themselves —
+          small adaptive specialists that together form an entity which
+          learns, prunes, and grows without meetings.
+        </p>
+        <p>
+          When execution is free, you don&rsquo;t need a workforce. You need
+          a <em>curator</em>. One person orchestrates a library of autonomous
+          agents that cover operations, research, sales, customer service,
+          capital allocation — everything.
+        </p>
+        <p>
+          The upper bound of what one person could build was set by how many
+          people they could coordinate. That constraint is gone. The new
+          upper bound is <em>imagination</em>.
+        </p>
+      </div>
+    </article>
+
+    <article class="act">
+      <header class="act-head">
+        <span class="eyebrow">III &nbsp;·&nbsp; In practice</span>
+        <h2 class="act-title">
+          Where this<br/>
+          is <em>real</em>.
+        </h2>
+      </header>
+
+      <ol class="cases">
+        <li class="case">
+          <span class="case-num">i</span>
+          <div class="case-body">
+            <h3>Risk management in financial services</h3>
+            <p class="case-desc">
+              An AI system that reviews, challenges, and documents every risk
+              in a regulated fund manager&rsquo;s risk register — two hundred
+              risks assessed in under an hour, each through a six-step
+              adversarial workflow. Regulatory citations verified against
+              actual instruments. Every step produces an immutable audit
+              trail. The system forces its own reasoning to be challenged
+              before anything is published.
+            </p>
+          </div>
+        </li>
+        <li class="case">
+          <span class="case-num">ii</span>
+          <div class="case-body">
+            <h3>Managing customer terms and conditions</h3>
+            <p class="case-desc">
+              An interview-driven assessment engine that ingests legal
+              documents — terms, conditions, policies, contracts — from any
+              source, classifies every assertion by epistemic status,
+              identifies risks across twelve categories, and challenges its
+              own findings against eleven criteria before publishing.
+              Defensible enough for a regulatory exam. Fast enough to run
+              before a contract is signed.
+            </p>
+          </div>
+        </li>
+        <li class="case">
+          <span class="case-num">iii</span>
+          <div class="case-body">
+            <h3>Building an AI-first organisation</h3>
+            <p class="case-desc">
+              A complete organisational architecture for a multi-jurisdiction
+              financial services firm, designed from first principles around
+              AI agents as the default workers. Twenty-five specialist agents
+              execute eighty capabilities. Eight verification agents
+              cross-check critical decisions. Thirty to forty humans focus on
+              strategy, regulatory relationships, and crisis response. Four
+              autonomy tiers govern what agents may do — and a documented
+              process upgrades those boundaries as trust is earned.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </article>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <span class="eyebrow">The mission</span>
+      <p class="closing-title" id="closing-title">
+        Oxygn enables<br/>
+        <em>infinitely scaled</em><br/>
+        human productivity.
+      </p>
+      <p class="closing-tag">Massively more.&nbsp;&nbsp;Vastly less.</p>
+
+      <div class="founder">
+        <div class="founder-head">
+          <div class="sig-name">James Shanahan</div>
+          <div class="sig-role">CEO &amp; Founder, Oxygn</div>
+        </div>
+        <p class="founder-bio">
+          Every financial institution that scales rebuilds the same
+          functions — compliance, finance, governance, marketing,
+          operations, risk — and staffs each one from scratch. The cost
+          scales linearly. The output doesn&rsquo;t. This is the problem
+          Oxygn is built to eliminate.
+        </p>
+        <p class="founder-bio">
+          Fintechs proved that financial services reduces to data and
+          brand. AI completes the argument: organic, supervised systems
+          that deliver what presents as commodity infrastructure —
+          differentiated by brand, reliability, and a step-change in value
+          to the customer.
+        </p>
+        <p class="founder-bio">
+          Fourteen countries. Every shape of financial institution from
+          neobank to insurer to sovereign fund.
+        </p>
+        <p class="founder-location">Based in Abu Dhabi.</p>
+      </div>
+
+      <a class="closing-link" href="mailto:hello@oxygn.xyz">
+        Get in touch
+        <span aria-hidden="true">&nbsp;→</span>
+      </a>
+    </section>
+
+    <footer class="foot">
+      <div class="foot-row">
+        <Wordmark size="0.7rem" sup={false} />
+        <span>© Oxygn</span>
+      </div>
+      <div class="foot-row">
+        <span>oxygn.xyz&nbsp;&nbsp;·&nbsp;&nbsp;v0.1.0</span>
+        <a href="https://github.com/oxygn-cloud-ai/website-xyz" target="_blank" rel="noreferrer">Source&nbsp;↗</a>
+      </div>
+    </footer>
+
+  </main>
+
+</Base>
+
+<style>
+  /* ─── Shell ─────────────────────────────────────────────────────── */
+  .shell {
+    position: relative;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1.25rem var(--gutter) 3rem;
+    z-index: 1;
+  }
+
+  /* ─── Topbar ────────────────────────────────────────────────────── */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-block: 0.25rem 0.75rem;
+    gap: 1rem;
+  }
+  .topbar-mark {
+    line-height: 0.9;
+    transition: opacity 400ms ease;
+  }
+  .topbar-mark:hover { opacity: 0.6; }
+  .topbar-meta {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    white-space: nowrap;
+  }
+  .dot {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    animation: pulse 2.4s ease-in-out infinite;
+    box-shadow: 0 0 0 3px rgba(255, 74, 28, 0.08);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.25; transform: scale(0.65); }
+  }
+
+  /* ─── Hero ──────────────────────────────────────────────────────── */
+  .hero {
+    padding-block: clamp(2.5rem, 7vw, 6rem) clamp(2.5rem, 6vw, 5rem);
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 62rem;
+  }
+  .hero-title {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 7.5vw, 6.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .hero-title .hero-line { display: block; }
+  .hero-title .hero-line:nth-child(2) {
+    padding-left: clamp(1rem, 5vw, 4rem);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-foot {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 66ch;
+    margin-top: 0.5rem;
+  }
+  @media (min-width: 820px) {
+    .hero-foot {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 3rem;
+      max-width: none;
+    }
+  }
+  .hero-sub {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1rem, 1.35vw, 1.18rem);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 44ch;
+    text-wrap: pretty;
+  }
+  .hero-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--subtle);
+    width: fit-content;
+    transition: color 400ms ease;
+    padding-top: 0.25rem;
+  }
+  .hero-cue:hover { color: var(--accent); }
+  .cue-bar {
+    position: relative;
+    width: 3rem;
+    height: 1px;
+    background: var(--mute);
+    display: block;
+    overflow: hidden;
+  }
+  .cue-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    animation: slide 3.4s ease-in-out infinite;
+  }
+  @keyframes slide {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ─── Act ───────────────────────────────────────────────────────── */
+  .act {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-top: 1px solid var(--faint);
+    display: grid;
+    gap: clamp(1.75rem, 3.5vw, 3rem);
+    max-width: 62ch;
+  }
+  .act-head {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--subtle);
+    display: inline-block;
+  }
+  .act-title {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-size: clamp(1.85rem, 4.75vw, 3.75rem);
+    line-height: 1.0;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .act-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ─── Pull quote ────────────────────────────────────────────────── */
+  .pull {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.125rem, 2.1vw, 1.55rem);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    max-width: 44ch;
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--accent);
+    text-wrap: balance;
+  }
+
+  /* ─── Prose ─────────────────────────────────────────────────────── */
+  .prose {
+    display: grid;
+    gap: 0.95em;
+    max-width: 52ch;
+  }
+  .prose p {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(0.97rem, 1.25vw, 1.1rem);
+    line-height: 1.6;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .prose em {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-size: 1.05em;
+  }
+
+  /* ─── Cases ──────────────────────────────────────────────────────── */
+  .cases {
+    list-style: none;
+    display: grid;
+    margin-top: clamp(0.25rem, 1.5vw, 1.25rem);
+  }
+  .case {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    column-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    padding-block: clamp(1.5rem, 3vw, 2.25rem);
+    border-top: 1px solid var(--faint);
+    align-items: baseline;
+  }
+  .cases li:last-child {
+    border-bottom: 1px solid var(--faint);
+  }
+  .case-num {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--step-2);
+    color: var(--mute);
+    line-height: 1;
+  }
+  .case-body h3 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.35rem, 3vw, 2.25rem);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .case-desc {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(0.97rem, 1.25vw, 1.1rem);
+    line-height: 1.6;
+    color: var(--subtle);
+    margin-top: 0.55rem;
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  /* ─── Closing ───────────────────────────────────────────────────── */
+  .closing {
+    padding-block: clamp(5rem, 12vw, 10rem);
+    border-top: 1px solid var(--faint);
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    justify-items: start;
+    max-width: 62ch;
+  }
+  .closing-title {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-size: clamp(1.85rem, 4.75vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    max-width: 18ch;
+    text-wrap: balance;
+    margin-top: 0.4rem;
+  }
+  .closing-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .closing-tag {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step-0);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--mute);
+  }
+  .founder {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    display: grid;
+    gap: 0.9rem;
+    color: var(--ink);
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    max-width: 48ch;
+  }
+  .founder-head {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .sig-name {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.125rem, 1.75vw, 1.35rem);
+    line-height: 1;
+  }
+  .sig-role {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--subtle);
+  }
+  .founder-bio {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .founder-location {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--subtle);
+  }
+  .closing-link {
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: var(--step-0);
+    color: var(--ink);
+    padding-bottom: 0.12rem;
+    border-bottom: 1px solid var(--rule);
+    transition: color 300ms ease, border-color 300ms ease;
+  }
+  .closing-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ─── Footer ────────────────────────────────────────────────────── */
+  .foot {
+    border-top: 1px solid var(--faint);
+    padding-top: 1.5rem;
+    margin-top: 3rem;
+    display: grid;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--subtle);
+  }
+  .foot-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  .foot-row a {
+    color: var(--subtle);
+    transition: color 300ms ease;
+  }
+  .foot-row a:hover { color: var(--accent); }
+
+  /* ─── Breath ────────────────────────────────────────────────────── */
+  .breath {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(78vh, 78vw);
+    aspect-ratio: 1;
+    border: 1px solid rgba(10, 10, 10, 0.11);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(1);
+    animation: breath 11s cubic-bezier(.45, 0, .55, 1) infinite;
+  }
+  @keyframes breath {
+    0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.55; }
+    50%      { transform: translate(-50%, -50%) scale(1.1);  opacity: 0.9; }
+  }
+
+  /* ─── Entrance ──────────────────────────────────────────────────── */
+  .shell > * {
+    animation: rise 900ms cubic-bezier(.2, .85, .25, 1) both;
+  }
+  .shell > :nth-child(1) { animation-delay:   0ms; }
+  .shell > :nth-child(2) { animation-delay:  80ms; }
+  .shell > :nth-child(3) { animation-delay: 380ms; }
+  .shell > :nth-child(4) { animation-delay: 460ms; }
+  .shell > :nth-child(5) { animation-delay: 540ms; }
+  .shell > :nth-child(6) { animation-delay: 620ms; }
+  .shell > :nth-child(7) { animation-delay: 700ms; }
+  .hero-title .hero-line {
+    animation: rise 1000ms cubic-bezier(.18, .88, .22, 1) both;
+  }
+  .hero-title .hero-line:nth-child(1) { animation-delay: 180ms; }
+  .hero-title .hero-line:nth-child(2) { animation-delay: 300ms; }
+  .hero-title .hero-line:nth-child(3) { animation-delay: 420ms; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(0.6rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .breath { display: none; }
+  }
+</style>
