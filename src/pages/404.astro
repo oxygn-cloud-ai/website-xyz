@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import Wordmark from '../components/Wordmark.astro';
+---
+<Base
+  title="Oxygn / Not found"
+  description="The page you requested doesn't exist on oxygn.xyz."
+>
+
+  <div class="breath" aria-hidden="true"></div>
+
+  <main class="shell">
+
+    <header class="topbar">
+      <a href="/" aria-label="Oxygn home" class="topbar-mark">
+        <Wordmark size="0.9rem" />
+      </a>
+      <span class="topbar-meta">
+        <span class="dot" aria-hidden="true"></span>
+        <span>404</span>
+      </span>
+    </header>
+
+    <section class="centre" aria-labelledby="nf-title">
+      <span class="eyebrow">Not found</span>
+      <h1 class="nf-title" id="nf-title">
+        <span class="nf-line">Nothing <em>here</em>.</span>
+        <span class="nf-line">Yet.</span>
+      </h1>
+      <p class="nf-sub">
+        The page you requested does not exist on oxygn.xyz. The
+        manifesto is at the homepage.
+      </p>
+      <a class="nf-cue" href="/">
+        <span class="cue-bar" aria-hidden="true"></span>
+        <span>Back to oxygn</span>
+      </a>
+    </section>
+
+  </main>
+
+</Base>
+
+<style>
+  .shell {
+    position: relative;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1.25rem var(--gutter) 3rem;
+    z-index: 1;
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-block: 0.25rem 0.75rem;
+    gap: 1rem;
+  }
+  .topbar-mark { line-height: 0.9; transition: opacity 400ms ease; }
+  .topbar-mark:hover { opacity: 0.6; }
+  .topbar-meta {
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--subtle);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    white-space: nowrap;
+  }
+  .dot {
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    animation: pulse 2.4s ease-in-out infinite;
+    box-shadow: 0 0 0 3px rgba(255, 74, 28, 0.08);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.25; transform: scale(0.65); }
+  }
+
+  .centre {
+    flex: 1;
+    display: grid;
+    align-content: center;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    max-width: 56rem;
+    padding-block: clamp(2rem, 6vw, 4rem);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--subtle);
+  }
+  .nf-title {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 7.5vw, 6.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .nf-line { display: block; }
+  .nf-line:nth-child(2) { padding-left: clamp(1rem, 5vw, 4rem); }
+  .nf-title em { font-style: italic; color: var(--accent); }
+
+  .nf-sub {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1rem, 1.35vw, 1.18rem);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 44ch;
+  }
+
+  .nf-cue {
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-family: var(--font-mono);
+    font-weight: 300;
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--subtle);
+    width: fit-content;
+    transition: color 400ms ease;
+  }
+  .nf-cue:hover { color: var(--accent); }
+  .cue-bar {
+    position: relative;
+    width: 3rem;
+    height: 1px;
+    background: var(--mute);
+    display: block;
+    overflow: hidden;
+  }
+  .cue-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    animation: slide 3.4s ease-in-out infinite;
+  }
+  @keyframes slide {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+
+  .breath {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(78vh, 78vw);
+    aspect-ratio: 1;
+    border: 1px solid rgba(10, 10, 10, 0.11);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%) scale(1);
+    animation: breath 11s cubic-bezier(.45, 0, .55, 1) infinite;
+  }
+  @keyframes breath {
+    0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.55; }
+    50%      { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9;  }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .breath { display: none; }
+    .dot, .cue-bar::before { animation: none; }
+  }
+</style>

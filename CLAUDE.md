@@ -12,7 +12,7 @@ project-specific context.
 - **Version:** 0.1.0 (see `package.json`)
 - **Repo:** `oxygn-cloud-ai/website-xyz`
 - **Jira epic:** `CPT-2`
-- **Hosting:** TBD
+- **Hosting:** Cloudflare Pages (Git Integration; build on push to main)
 
 ## Stack
 
