@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "website-xyz",
+    "type": "software",
+    "description": "oxygn.xyz company website (Astro 4.x static marketing site)"
+  },
+  "jira": {
+    "projectKey": "CPT",
+    "cloudId": "81a55da4-28c8-4a49-8a47-03a98a73f152",
+    "epicKey": "CPT-2",
+    "boardUrl": "https://chocfin.atlassian.net/browse/CPT-2"
+  },
+  "github": {
+    "owner": "oxygn-cloud-ai",
+    "repo": "website-xyz",
+    "defaultBranch": "main",
+    "issuesEnabled": false,
+    "branchProtection": {
+      "requiredStatusChecks": ["test"],
+      "strict": true,
+      "enforceAdmins": false,
+      "allowForcePushes": false,
+      "allowDeletions": false
+    }
+  },
+  "sessions": {
+    "roles": [
+      "master",
+      "planner",
+      "implementer",
+      "fixer",
+      "merger",
+      "chk1",
+      "chk2",
+      "performance",
+      "playtester",
+      "reviewer",
+      "triager"
+    ],
+    "loops": {
+      "master": { "intervalMinutes": 10, "prompt": "loops/loop.md" },
+      "triager": { "intervalMinutes": 10, "prompt": "loops/loop.md" },
+      "reviewer": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
+      "merger": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
+      "chk1": { "intervalMinutes": 30, "prompt": "loops/loop.md" },
+      "chk2": { "intervalMinutes": 30, "prompt": "loops/loop.md" },
+      "fixer": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
+      "implementer": { "intervalMinutes": 15, "prompt": "loops/loop.md" }
+    }
+  },
+  "env": {
+    "project": {},
+    "sessions": {}
+  },
+  "coverage": {
+    "tool": "vitest",
+    "thresholds": {}
+  },
+  "sandbox": {
+    "type": "docker",
+    "setupInstructions": "Build via `npm run build`, then serve dist/ inside an isolated container. Example: `docker run --rm -p 8080:8080 -v $(pwd)/dist:/app/dist node:20-alpine npx serve /app/dist -l 8080`. Pin a port outside dev defaults."
+  },
+  "servers": {
+    "production": "https://oxygn.xyz"
+  },
+  "deviations": []
+}
