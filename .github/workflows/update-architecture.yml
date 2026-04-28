@@ -1,0 +1,153 @@
+name: Update ARCHITECTURE.md
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-architecture
+  cancel-in-progress: false
+
+jobs:
+  update-architecture:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gather codebase context
+        run: |
+          {
+            echo "## Directory tree"
+            find . -type f \
+              -not -path '*/node_modules/*' \
+              -not -path '*/.git/*' \
+              -not -path '*/.worktrees/*' \
+              -not -path '*/.astro/*' \
+              -not -path '*/dist/*' \
+              -not -path '*/coverage/*' \
+              -not -name 'package-lock.json' \
+              | sort | head -500
+          } > /tmp/dir_structure.txt
+
+          {
+            for f in package.json tsconfig.json astro.config.mjs astro.config.ts .gitignore; do
+              if [ -f "$f" ]; then
+                echo "=== FILE: $f ==="
+                cat "$f"
+                echo ""
+              fi
+            done
+          } > /tmp/configs.txt
+
+          {
+            find src -type f \( -name '*.astro' -o -name '*.ts' -o -name '*.tsx' -o -name '*.css' -o -name '*.scss' \) 2>/dev/null \
+              | sort | while read -r f; do
+                echo "=== FILE: $f ==="
+                head -200 "$f"
+                echo ""
+              done
+          } > /tmp/source_files.txt
+
+          {
+            find tests -type f 2>/dev/null | sort | while read -r f; do
+              echo "=== FILE: $f ==="
+              cat "$f"
+              echo ""
+            done
+          } > /tmp/tests.txt
+
+          {
+            find .github/workflows -type f -name '*.yml' 2>/dev/null | sort | while read -r f; do
+              echo "=== FILE: $f ==="
+              cat "$f"
+              echo ""
+            done
+          } > /tmp/workflows.txt
+
+          {
+            for f in PHILOSOPHY.md README.md CLAUDE.md PROJECT_CONFIG.json; do
+              if [ -f "$f" ]; then
+                echo "=== FILE: $f ==="
+                cat "$f"
+                echo ""
+              fi
+            done
+          } > /tmp/docs.txt
+
+      - name: Generate ARCHITECTURE.md
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          PROMPT=$(cat <<'PROMPT_EOF'
+          You are an expert software architect. Generate a comprehensive ARCHITECTURE.md for this Astro static-site project, based strictly on the codebase provided.
+
+          MUST include these sections (use "Not applicable" with a one-line justification for sections that genuinely do not apply to a static site, rather than omitting):
+          1. Project Overview
+          2. Directory Structure
+          3. Architecture Pattern
+          4. Core Components
+          5. Data Flow
+          6. Database Schema
+          7. API Layer
+          8. State Management
+          9. Authentication & Authorization
+          10. Configuration
+          11. Key Abstractions
+          12. Error Handling
+          13. Testing
+          14. Build & Deployment
+          15. Integrations
+          16. Cross-Cutting Concerns
+
+          Constraints:
+          - British English (colour, organise, behaviour).
+          - Reject em dashes; use commas, semicolons, colons, or full stops.
+          - Be exhaustively detailed about what is present. Do not invent functionality not visible in the codebase.
+          - Output ONLY the markdown content. Do not wrap the whole document in code fences. Do not echo this prompt.
+          PROMPT_EOF
+          )
+
+          CONTEXT=$(cat /tmp/dir_structure.txt /tmp/configs.txt /tmp/source_files.txt /tmp/tests.txt /tmp/workflows.txt /tmp/docs.txt)
+
+          RESPONSE=$(curl -sS -X POST https://api.anthropic.com/v1/messages \
+            -H "content-type: application/json" \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -d "$(jq -n \
+              --arg prompt "$PROMPT" \
+              --arg context "$CONTEXT" \
+              '{
+                model: "claude-sonnet-4-6",
+                max_tokens: 16000,
+                messages: [{
+                  role: "user",
+                  content: ("Here is the codebase:\n\n" + $context + "\n\n" + $prompt)
+                }]
+              }')")
+
+          echo "$RESPONSE" | jq -r '.content[0].text' > ARCHITECTURE.md
+
+          if [ ! -s ARCHITECTURE.md ]; then
+            echo "ERROR: ARCHITECTURE.md is empty"
+            echo "API response (first 500 chars): $(echo "$RESPONSE" | head -c 500)"
+            exit 1
+          fi
+          echo "ARCHITECTURE.md generated ($(wc -l < ARCHITECTURE.md) lines)"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ARCHITECTURE.md
+          if git diff --cached --quiet; then
+            echo "No changes to ARCHITECTURE.md"
+          else
+            git commit -m "docs: auto-update ARCHITECTURE.md [skip ci]"
+            git push
+          fi
