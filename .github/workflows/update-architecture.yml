@@ -84,6 +84,14 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
+          # Fail fast if the secret is unset rather than calling the API
+          # with empty auth and getting a "null" response we silently write.
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ERROR: ANTHROPIC_API_KEY secret is not set on this repo."
+            echo "Set with: gh secret set ANTHROPIC_API_KEY -R oxygn-cloud-ai/website-xyz"
+            exit 1
+          fi
+
           PROMPT=$(cat <<'PROMPT_EOF'
           You are an expert software architect. Generate a comprehensive ARCHITECTURE.md for this Astro static-site project, based strictly on the codebase provided.
 
@@ -115,30 +123,59 @@ jobs:
 
           CONTEXT=$(cat /tmp/dir_structure.txt /tmp/configs.txt /tmp/source_files.txt /tmp/tests.txt /tmp/workflows.txt /tmp/docs.txt)
 
-          RESPONSE=$(curl -sS -X POST https://api.anthropic.com/v1/messages \
+          PAYLOAD=$(jq -n \
+            --arg prompt "$PROMPT" \
+            --arg context "$CONTEXT" \
+            '{
+              model: "claude-sonnet-4-6",
+              max_tokens: 16000,
+              messages: [{
+                role: "user",
+                content: ("Here is the codebase:\n\n" + $context + "\n\n" + $prompt)
+              }]
+            }')
+
+          # Capture HTTP status separately so non-200 responses cannot
+          # silently overwrite ARCHITECTURE.md with garbage.
+          HTTP_RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST https://api.anthropic.com/v1/messages \
             -H "content-type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
-            -d "$(jq -n \
-              --arg prompt "$PROMPT" \
-              --arg context "$CONTEXT" \
-              '{
-                model: "claude-sonnet-4-6",
-                max_tokens: 16000,
-                messages: [{
-                  role: "user",
-                  content: ("Here is the codebase:\n\n" + $context + "\n\n" + $prompt)
-                }]
-              }')")
+            -d "$PAYLOAD")
 
-          echo "$RESPONSE" | jq -r '.content[0].text' > ARCHITECTURE.md
+          HTTP_CODE=$(printf '%s' "$HTTP_RESPONSE" | tail -n 1)
+          RESPONSE=$(printf '%s' "$HTTP_RESPONSE" | sed '$d')
 
-          if [ ! -s ARCHITECTURE.md ]; then
-            echo "ERROR: ARCHITECTURE.md is empty"
-            echo "API response (first 500 chars): $(echo "$RESPONSE" | head -c 500)"
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "ERROR: Anthropic API returned HTTP $HTTP_CODE"
+            echo "Response (first 1000 chars): $(printf '%s' "$RESPONSE" | head -c 1000)"
             exit 1
           fi
-          echo "ARCHITECTURE.md generated ($(wc -l < ARCHITECTURE.md) lines)"
+
+          if printf '%s' "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+            echo "ERROR: API returned error envelope:"
+            printf '%s' "$RESPONSE" | jq -c '.error'
+            exit 1
+          fi
+
+          TEXT=$(printf '%s' "$RESPONSE" | jq -r '.content[0].text // empty')
+
+          if [ -z "$TEXT" ] || [ "$TEXT" = "null" ]; then
+            echo "ERROR: API response had no text content."
+            echo "Response keys: $(printf '%s' "$RESPONSE" | jq -c 'keys')"
+            exit 1
+          fi
+
+          # Sanity floor: a real ARCHITECTURE.md will be many hundreds of
+          # chars at minimum. Anything shorter is almost certainly garbage.
+          if [ ${#TEXT} -lt 500 ]; then
+            echo "ERROR: API response text is suspiciously short (${#TEXT} chars):"
+            printf '%s\n' "$TEXT"
+            exit 1
+          fi
+
+          printf '%s\n' "$TEXT" > ARCHITECTURE.md
+          echo "ARCHITECTURE.md generated (${#TEXT} chars, $(wc -l < ARCHITECTURE.md) lines)"
 
       - name: Commit and push
         run: |
