@@ -63,39 +63,60 @@
   "servers": {
     "production": "https://oxygn.xyz"
   },
-  "deviations": [],
+  "deviations": [
+    {
+      "check": "17 (timeoutMinutes)",
+      "reason": "timeoutMinutes is not required by PROJECT_CONFIG.schema.json; _lib.sh handles missing values gracefully. Adding aspirational fields would be noise."
+    }
+  ],
   "loops": {
     "master": {
-      "intervalMinutes": 10,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/master.md",
+      "stateFile": ".claude/state/master.md"
     },
     "triager": {
-      "intervalMinutes": 10,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/triager.md",
+      "stateFile": ".claude/state/triager.md"
     },
     "reviewer": {
-      "intervalMinutes": 15,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/reviewer.md",
+      "stateFile": ".claude/state/reviewer.md"
     },
     "chk1": {
-      "intervalMinutes": 30,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 15,
+      "driver": "session",
+      "prompt": "loops/chk1.md",
+      "stateFile": ".claude/state/chk1.md"
     },
     "chk2": {
-      "intervalMinutes": 30,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 15,
+      "driver": "session",
+      "prompt": "loops/chk2.md",
+      "stateFile": ".claude/state/chk2.md"
     },
     "fixer": {
-      "intervalMinutes": 15,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/fixer.md",
+      "stateFile": ".claude/state/fixer.md"
     },
     "implementer": {
-      "intervalMinutes": 15,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/implementer.md",
+      "stateFile": ".claude/state/implementer.md"
     },
     "versioner": {
-      "intervalMinutes": 15,
-      "prompt": "loops/loop.md"
+      "intervalMinutes": 10,
+      "driver": "session",
+      "prompt": "loops/versioner.md",
+      "stateFile": ".claude/state/versioner.md"
     },
     "performance": {
       "intervalMinutes": 15,
