@@ -13,7 +13,9 @@
       "defaultBranch": "main",
       "issuesEnabled": false,
       "branchProtection": {
-        "requiredStatusChecks": ["test"],
+        "requiredStatusChecks": [
+          "test"
+        ],
         "strict": false,
         "enforceAdmins": false,
         "allowForcePushes": false,
@@ -40,17 +42,7 @@
       "playtester",
       "reviewer",
       "triager"
-    ],
-    "loops": {
-      "master": { "intervalMinutes": 10, "prompt": "loops/loop.md" },
-      "triager": { "intervalMinutes": 10, "prompt": "loops/loop.md" },
-      "reviewer": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
-      "merger": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
-      "chk1": { "intervalMinutes": 30, "prompt": "loops/loop.md" },
-      "chk2": { "intervalMinutes": 30, "prompt": "loops/loop.md" },
-      "fixer": { "intervalMinutes": 15, "prompt": "loops/loop.md" },
-      "implementer": { "intervalMinutes": 15, "prompt": "loops/loop.md" }
-    }
+    ]
   },
   "env": {
     "project": {},
@@ -67,5 +59,39 @@
   "servers": {
     "production": "https://oxygn.xyz"
   },
-  "deviations": []
+  "deviations": [],
+  "loops": {
+    "master": {
+      "intervalMinutes": 10,
+      "prompt": "loops/loop.md"
+    },
+    "triager": {
+      "intervalMinutes": 10,
+      "prompt": "loops/loop.md"
+    },
+    "reviewer": {
+      "intervalMinutes": 15,
+      "prompt": "loops/loop.md"
+    },
+    "merger": {
+      "intervalMinutes": 15,
+      "prompt": "loops/loop.md"
+    },
+    "chk1": {
+      "intervalMinutes": 30,
+      "prompt": "loops/loop.md"
+    },
+    "chk2": {
+      "intervalMinutes": 30,
+      "prompt": "loops/loop.md"
+    },
+    "fixer": {
+      "intervalMinutes": 15,
+      "prompt": "loops/loop.md"
+    },
+    "implementer": {
+      "intervalMinutes": 15,
+      "prompt": "loops/loop.md"
+    }
+  }
 }
