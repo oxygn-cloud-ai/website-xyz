@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "default"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "CronCreate|CronDelete|CronList",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Volumes/TB8/OxygnAI/Repos/website-xyz/.claude/hooks/block-cron-ops.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
