@@ -1,28 +1,31 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "project": {
     "name": "website-xyz",
     "type": "software",
     "description": "oxygn.xyz company website (Astro 4.x static marketing site)"
   },
-  "jira": {
-    "projectKey": "CPT",
-    "cloudId": "81a55da4-28c8-4a49-8a47-03a98a73f152",
-    "epicKey": "CPT-2",
-    "boardUrl": "https://chocfin.atlassian.net/browse/CPT-2"
-  },
-  "github": {
-    "owner": "oxygn-cloud-ai",
-    "repo": "website-xyz",
-    "defaultBranch": "main",
-    "issuesEnabled": false,
-    "branchProtection": {
-      "requiredStatusChecks": ["test"],
-      "strict": false,
-      "enforceAdmins": false,
-      "allowForcePushes": false,
-      "allowDeletions": false
+  "repo": {
+    "provider": "github",
+    "github": {
+      "owner": "oxygn-cloud-ai",
+      "repo": "website-xyz",
+      "defaultBranch": "main",
+      "issuesEnabled": false,
+      "branchProtection": {
+        "requiredStatusChecks": ["test"],
+        "strict": false,
+        "enforceAdmins": false,
+        "allowForcePushes": false,
+        "allowDeletions": false
+      }
     }
+  },
+  "jira": {
+    "projectKey": "AI1",
+    "cloudId": "f613a24a-e1b0-4b8a-a06a-54d9fa6e9e45",
+    "epicKey": "AI1-293",
+    "boardUrl": "https://oxygn.atlassian.net/browse/AI1-293"
   },
   "sessions": {
     "roles": [

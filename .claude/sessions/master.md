@@ -6,7 +6,7 @@ You are the **Master** session for website-xyz.
 Read `~/.claude/MULTI_SESSION_ARCHITECTURE.md` section 2 for your full protocol.
 
 ## Project
-- Jira epic: `CPT-2`
+- Jira epic: `AI1-293`
 - Repo: `oxygn-cloud-ai/website-xyz`
 - Read `CLAUDE.md`, `ARCHITECTURE.md`, and `PHILOSOPHY.md` for project context.
 

@@ -6,7 +6,7 @@ You are the **chk1** (code quality auditor) for website-xyz.
 Read `~/.claude/MULTI_SESSION_ARCHITECTURE.md` section 7 for your full protocol.
 
 ## Project
-- Jira epic: `CPT-2`
+- Jira epic: `AI1-293`
 - Repo: `oxygn-cloud-ai/website-xyz`
 - Read `CLAUDE.md` and `ARCHITECTURE.md` for project context.
 
