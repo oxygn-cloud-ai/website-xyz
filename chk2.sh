@@ -1,0 +1,1 @@
+.claude/sessions/chk2.md
