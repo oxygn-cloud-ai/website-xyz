@@ -41,7 +41,11 @@
       "performance",
       "playtester",
       "reviewer",
-      "triager"
+      "triager",
+      "health",
+      "learner",
+      "releaser",
+      "researcher"
     ]
   },
   "env": {
@@ -92,6 +96,36 @@
     "versioner": {
       "intervalMinutes": 15,
       "prompt": "loops/loop.md"
+    },
+    "performance": {
+      "intervalMinutes": 15,
+      "driver": "session",
+      "prompt": "loops/performance.md",
+      "stateFile": ".claude/state/performance.md"
+    },
+    "playtester": {
+      "intervalMinutes": 15,
+      "driver": "session",
+      "prompt": "loops/playtester.md",
+      "stateFile": ".claude/state/playtester.md"
+    },
+    "health": {
+      "intervalMinutes": 5,
+      "driver": "session",
+      "prompt": "loops/health.md",
+      "stateFile": ".claude/state/health.md"
+    },
+    "learner": {
+      "intervalMinutes": 15,
+      "driver": "session",
+      "prompt": "loops/learner.md",
+      "stateFile": ".claude/state/learner.md"
+    },
+    "releaser": {
+      "intervalMinutes": 10,
+      "driver": "session",
+      "prompt": "loops/releaser.md",
+      "stateFile": ".claude/state/releaser.md"
     }
   }
 }
