@@ -7,9 +7,9 @@ project-specific context.
 ## Project
 
 - **Name:** website-xyz
-- **Type:** Software — static marketing website
-- **Description:** oxygn.xyz company website
-- **Version:** 0.1.0 (see `package.json`)
+- **Type:** Software — static multi-page marketing website
+- **Description:** oxygn.xyz — multi-page marketing site (8 pages). AI-native GRC+L for regulated FIs.
+- **Version:** 0.2.0 (see `package.json`)
 - **Repo:** `oxygn-cloud-ai/website-xyz`
 - **Jira epic:** `AI1-293`
 - **Hosting:** Cloudflare Pages (Git Integration; build on push to main)
@@ -28,7 +28,9 @@ project-specific context.
 | `PHILOSOPHY.md` | Vision, principles, out-of-scope (human-owned) |
 | `ARCHITECTURE.md` | System layout, module reference |
 | `astro.config.mjs` | Site + build config |
-| `src/pages/` | Route-based pages |
+| `src/content/site.config.ts` | All site constants (nav, services, metrics, content) |
+| `src/pages/` | 8 route-based pages (index, services, how-it-works, trust, about, resources, contact, 404) |
+| `src/components/` | Reusable UI components (Navigation, Footer, ServiceCard, MetricStrip, CTABanner) |
 | `tests/` | Vitest suites |
 | `.github/workflows/test.yml` | CI (build + test + notify-failure) |
 

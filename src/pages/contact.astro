@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../content/site.config';
+---
+<Base title={`${SITE.name} / Contact`} description="Request a demo or get in touch about your regulatory obligations.">
+  <Navigation />
+
+  <main>
+    <section class="section page-head" aria-labelledby="ph">
+      <div class="container">
+        <p class="eyebrow">Contact</p>
+        <h1 class="display" style="font-size:var(--text-xl);line-height:1.05;letter-spacing:-0.015em" id="ph">What does your<br/>licence require?</h1>
+        <p class="section-body">Tell us about your regulatory obligations and how you are meeting them. We will show you how we would structure your engagement.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container grid-2">
+        <div>
+          <h2 class="form-h">Send us a message.</h2>
+          <form class="cf" action="https://formspree.io/f/placeholder" method="POST" style="margin-top:1rem">
+            <label class="fl"><span class="fl-l">Name</span><input type="text" name="name" required class="fl-i" placeholder="Your full name" /></label>
+            <label class="fl"><span class="fl-l">Company</span><input type="text" name="company" required class="fl-i" placeholder="Your company or institution" /></label>
+            <label class="fl"><span class="fl-l">Email</span><input type="email" name="email" required class="fl-i" placeholder="you@company.com" /></label>
+            <label class="fl"><span class="fl-l">Message</span><textarea name="message" rows="4" required class="fl-i" placeholder="Your regulatory context and what you are looking for."></textarea></label>
+            <button type="submit" class="btn btn-primary">Send message</button>
+          </form>
+        </div>
+
+        <div style="display:grid;gap:1.5rem;align-content:start">
+          <div>
+            <h2 class="form-h">Direct contact.</h2>
+            <div class="inf" style="margin-top:1rem">
+              <div class="ii"><span class="iil">Email</span><a href={`mailto:${SITE.email}`} class="iiv link">{SITE.email}</a></div>
+              <div class="ii"><span class="iil">Company</span><span class="iiv">Oxygn Pte Ltd</span></div>
+            </div>
+          </div>
+          <div class="demo">
+            <h3 class="demo-t">Request a demo</h3>
+            <p class="demo-d">Walk through your regulatory perimeter and risk profile. We will show you how we would structure your engagement.</p>
+            <a href={`mailto:${SITE.email}?subject=Demo%20request`} class="btn btn-primary" style="margin-top:0.75rem">Request a demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
+  .form-h { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .cf { display: grid; gap: 0.85rem; }
+  .fl { display: grid; gap: 0.2rem; }
+  .fl-l { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.12em; }
+  .fl-i { font-family: var(--font-body); font-size: var(--text-sm); color: var(--ink); background: var(--surface); border: 1px solid var(--ink-faint); border-radius: var(--radius); padding: 0.6rem 0.8rem; width: 100%; transition: border-color var(--trans); }
+  .fl-i:focus { outline: none; border-color: var(--accent); }
+  .fl-i::placeholder { color: var(--ink-faint); }
+  .inf { display: grid; gap: 0.7rem; }
+  .ii { display: grid; gap: 0.1rem; }
+  .iil { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.12em; }
+  .iiv { font-size: var(--text-base); color: var(--ink); }
+  .iiv.link { color: var(--accent); transition: opacity var(--trans); }
+  .iiv.link:hover { opacity: 0.6; }
+  .demo { border: 1px solid var(--ink-faint); border-radius: var(--radius); padding: var(--card-pad); display: grid; gap: 0.5rem; }
+  .demo-t { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .demo-d { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; }
+</style>

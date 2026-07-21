@@ -1,0 +1,46 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props;
+---
+<section class="ctab section">
+  <div class="container">
+    <p class="ctab-title">{title}</p>
+    {subtitle && <p class="ctab-sub">{subtitle}</p>}
+    <div class="ctab-actions">
+      <a href="/contact" class="btn btn-primary">Request a demo</a>
+      <a href="mailto:hello@oxygn.xyz" class="btn btn-outline">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ctab { text-align: center; }
+  .ctab-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--text-lg);
+    line-height: 1.12;
+    color: var(--ink);
+    max-width: 28ch;
+    margin: 0 auto;
+  }
+  .ctab-sub {
+    font-size: var(--text-sm);
+    color: var(--ink-light);
+    max-width: 48ch;
+    margin: 0.75rem auto 0;
+    line-height: 1.55;
+  }
+  .ctab-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+  }
+</style>

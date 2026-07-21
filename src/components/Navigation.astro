@@ -1,0 +1,39 @@
+---
+import { NAV } from '../content/site.config';
+const currentPath = Astro.url?.pathname || '/';
+---
+<nav class="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand" aria-label="Oxygn home">
+      <span class="nav-wordmark">oxygn<sup>ai</sup></span>
+    </a>
+    <div class="nav-links">
+      {NAV.map(item => {
+        const active = currentPath === item.href || currentPath.startsWith(item.href + '/');
+        return <a href={item.href} class={`nav-link${active ? ' active' : ''}`}>{item.label}</a>;
+      })}
+    </div>
+    <div class="nav-cta">
+      <a href="/contact" class="btn btn-primary">Request a demo</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(247, 244, 237, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: var(--rule);
+  }
+  .nav-inner { max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter); display: flex; align-items: center; height: 3.5rem; gap: 1.5rem; }
+  .nav-brand { flex-shrink: 0; transition: opacity var(--trans); }
+  .nav-brand:hover { opacity: 0.6; }
+  .nav-wordmark { font-family: var(--font-body); font-weight: 200; font-size: var(--text-md); letter-spacing: -0.03em; color: var(--ink); }
+  .nav-wordmark sup { font-size: 0.38em; font-weight: 300; margin-left: 0.06em; letter-spacing: 0.02em; color: var(--accent); }
+  .nav-links { display: none; align-items: center; gap: 0.15rem; margin-left: auto; }
+  @media (min-width: 48rem) { .nav-links { display: flex; } }
+  .nav-link { font-size: var(--text-sm); font-weight: 400; color: var(--ink-light); padding: 0.35rem 0.7rem; border-radius: var(--radius); transition: color var(--trans); }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); }
+  @media (min-width: 48rem) { .nav-cta { margin-left: 0.5rem; } }
+</style>

@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  bundles?: string;
+  id?: string;
+  href?: string;
+}
+
+const { title, description, bundles, id, href } = Astro.props;
+---
+<article class="scard" {...(id ? { id } : {})}>
+  <div class="scard-rule" aria-hidden="true"></div>
+  <h3 class="scard-title">{title}</h3>
+  <p class="scard-desc">{description}</p>
+  {bundles && <span class="scard-bundles">{bundles}</span>}
+  {href && <a href={href} class="scard-link">Learn more &rarr;</a>}
+</article>
+
+<style>
+  .scard {
+    background: var(--surface);
+    border: 1px solid var(--ink-faint);
+    border-radius: var(--radius);
+    padding: var(--card-pad);
+    display: grid;
+    gap: 0.65rem;
+    align-content: start;
+    transition: border-color var(--transition);
+  }
+  .scard:hover { border-color: var(--ink-light); }
+
+  .scard-rule { width: 1.5rem; height: 2px; background: var(--accent); }
+  .scard-title { font-size: var(--text-md); font-weight: 500; color: var(--ink); letter-spacing: -0.01em; }
+  .scard-desc { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; }
+  .scard-bundles {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .scard-link {
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--accent);
+    margin-top: 0.3rem;
+    transition: opacity var(--transition);
+  }
+  .scard-link:hover { opacity: 0.6; }
+</style>

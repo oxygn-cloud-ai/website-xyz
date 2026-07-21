@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { SITE, JURISDICTIONS } from '../content/site.config';
+---
+<Base title={`${SITE.name} / About`} description="Oxygn delivers Governance, Risk, Compliance, Legal, Internal Audit, and Company Secretary services to Singapore-licensed financial institutions.">
+  <Navigation />
+
+  <main>
+    <section class="section page-head" aria-labelledby="ph">
+      <div class="container">
+        <p class="eyebrow">About</p>
+        <h1 class="display" style="font-size:var(--text-xl);line-height:1.05;letter-spacing:-0.015em" id="ph">A regulated company<br/>should run itself.</h1>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container grid-2">
+        <div>
+          <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em">What we do.</h2>
+          <p class="section-body">Governance, Risk, Compliance, Legal, Internal Audit, and Company Secretary — delivered as a continuous managed service to Singapore MPI, SPI, and CMS licensees. ~10 senior humans govern ~5,000 AI agents across six service lines.</p>
+        </div>
+        <div>
+          <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em">How we do it.</h2>
+          <p class="section-body">We deliver regulator-defensible outputs under our own professional indemnity, with our own qualified officers in your named roles. The workforce that builds your operating policies operates them in production.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="fo-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="fo-h">Founder.</h2>
+        <div class="fcard" style="margin-top:var(--block-gap)">
+          <div class="ftop">
+            <p class="fname">James Shanahan</p>
+            <p class="frole">CEO &amp; Founder, Oxygn</p>
+          </div>
+          <div class="ftext">
+            <p>Fourteen countries. Every shape of financial institution — neobank, insurer, sovereign fund. Every institution that scales rebuilds the same functions and staffs each one from scratch. The cost scales linearly. The output does not.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="te-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="te-h">The team.</h2>
+        <p class="section-body">~10 senior humans. Each qualified in their service line. Every regulator-facing output passes through the appropriate qualified officer.</p>
+        <div class="grid-3" style="margin-top:var(--block-gap)">
+          <div><h3 class="tc-n">General Counsel</h3><p class="tc-d">Admitted Singapore lawyer in-house. Supervises every Legal output.</p></div>
+          <div><h3 class="tc-n">Compliance Officer &amp; MLRO</h3><p class="tc-d">MAS-recognised. Provided as named officer under the PSA and SFA.</p></div>
+          <div><h3 class="tc-n">Chief Risk Officer</h3><p class="tc-d">Enterprise risk frameworks, operational monitoring, model validation.</p></div>
+          <div><h3 class="tc-n">Head of Internal Audit</h3><p class="tc-d">IIA-qualified (CIA, CRMA, CFE). Operationally independent. Reports to client Audit Committees.</p></div>
+          <div><h3 class="tc-n">Head of Company Secretary</h3><p class="tc-d">CSIS-qualified. Direct Section 171 appointment. Statutory filings, board support.</p></div>
+          <div><h3 class="tc-n">Director / Nominee Director</h3><p class="tc-d">Resident-director provision during licence acquisition under the Companies Act.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="jurisdiction" aria-labelledby="ju-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="ju-h">Jurisdictions.</h2>
+        <p class="section-body">Singapore primary domicile. Capabilities maintained for ADGM, Hong Kong, the United Kingdom, and one secondary common-law market.</p>
+        <div class="jgrid" style="margin-top:var(--block-gap)">
+          {JURISDICTIONS.map(j => (<div class="jcard"><p class="jm">{j.market}</p><p class="jr">{j.regulator}</p><p class="js">{j.status}</p></div>))}
+        </div>
+      </div>
+    </section>
+
+    <CTABanner title="Meet the team behind the workforce." subtitle="Book a conversation to discuss your regulatory obligations." />
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
+  .fcard { border: 1px solid var(--ink-faint); border-radius: var(--radius); display: grid; grid-template-columns: 1fr; overflow: hidden; }
+  @media (min-width: 44rem) { .fcard { grid-template-columns: 1fr 2fr; } }
+  .ftop { padding: var(--card-pad); border-bottom: var(--rule); }
+  @media (min-width: 44rem) { .ftop { border-bottom: 0; border-right: var(--rule); } }
+  .fname { font-family: var(--font-display); font-style: italic; font-size: var(--text-xl); color: var(--ink); line-height: 1; }
+  .frole { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 0.5rem; }
+  .ftext { padding: var(--card-pad); }
+  .ftext p { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.6; }
+  .tc-n { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .tc-d { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.5; margin-top: 0.15rem; }
+  .jgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+  .jcard { border: 1px solid var(--ink-faint); border-radius: var(--radius); padding: var(--card-pad); display: grid; gap: 0.15rem; }
+  .jm { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .jr { font-size: var(--text-sm); color: var(--ink-light); }
+  .js { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+</style>

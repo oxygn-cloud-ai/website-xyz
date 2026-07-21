@@ -1,0 +1,64 @@
+---
+interface Metric {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  metrics: readonly Metric[];
+}
+
+const { metrics } = Astro.props;
+---
+<div class="mstrip">
+  {metrics.map((m, i) => (
+    <div class="metric">
+      {i > 0 && <span class="metric-rule" aria-hidden="true"></span>}
+      <span class="metric-value">{m.value}</span>
+      <span class="metric-label">{m.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .mstrip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (min-width: 48rem) { .mstrip { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+
+  .metric {
+    display: grid;
+    gap: 0.25rem;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    position: relative;
+  }
+
+  .metric-rule {
+    position: absolute;
+    left: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background: var(--ink-faint);
+  }
+
+  .metric-value {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--text-xl);
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+</style>

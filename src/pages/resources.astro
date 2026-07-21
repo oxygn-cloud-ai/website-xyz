@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../content/site.config';
+---
+<Base title={`${SITE.name} / Resources`} description="Public methodology and regulatory guidance on AI-native governance.">
+  <Navigation />
+
+  <main>
+    <section class="section page-head" aria-labelledby="ph">
+      <div class="container">
+        <p class="eyebrow">Resources</p>
+        <h1 class="display" style="font-size:var(--text-xl);line-height:1.05;letter-spacing:-0.015em" id="ph">Public methodology.<br/>Open playbooks.</h1>
+        <p class="section-body">Our methodology is documented, versioned, and publicly inspectable. Clients see how their work is done before they sign.</p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="grid-2">
+          <div class="rcard">
+            <p class="rtag">Playbook</p>
+            <h2 class="rtitle">MAS Licensing Playbook</h2>
+            <p class="rdesc">Free public asset for prospective Singapore MPI, SPI, and CMS licensees. Pre-application strategy, Form 1 drafting, policy library construction, AML/KYC framework, examination management. Available on request.</p>
+            <a href="/contact" class="rlink">Request the playbook &rarr;</a>
+          </div>
+          <div class="rcard">
+            <p class="rtag">Methodology</p>
+            <h2 class="rtitle">Service Line Methodologies</h2>
+            <p class="rdesc">Each service line operates from a versioned methodology document. Governance, Risk, Compliance, Legal, Internal Audit, Company Secretary — publicly inspectable.</p>
+            <a href="/services" class="rlink">Explore service lines &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="ra-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="ra-h">Regulatory radar.</h2>
+        <p class="section-body">Continuous monitoring across Singapore and every expansion market. Clients alerted before effective dates with mapped impact assessments.</p>
+        <div class="pills" style="margin-top:var(--block-gap)">
+          <span>MAS</span><span>ACRA</span><span>IRAS</span><span>CAD</span><span>FSRA (ADGM)</span><span>SFC (HK)</span><span>FCA (UK)</span><span>DFSA (DIFC)</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
+  .rcard { border: 1px solid var(--ink-faint); border-radius: var(--radius); padding: var(--card-pad); display: grid; gap: 0.4rem; align-content: start; background: var(--surface); }
+  .rtag { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; }
+  .rtitle { font-size: var(--text-md); font-weight: 500; color: var(--ink); line-height: 1.2; }
+  .rdesc { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; }
+  .rlink { font-size: var(--text-sm); font-weight: 400; color: var(--accent); margin-top: 0.2rem; transition: opacity var(--trans); }
+  .rlink:hover { opacity: 0.6; }
+  .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pills span { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-light); border: 1px solid var(--ink-faint); border-radius: 2rem; padding: 0.35rem 0.9rem; letter-spacing: 0.08em; }
+</style>

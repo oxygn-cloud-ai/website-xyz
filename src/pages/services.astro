@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { SITE, SERVICES } from '../content/site.config';
+---
+<Base title={`${SITE.name} / Services`} description="Governance, Risk, Compliance, Legal, Internal Audit, Company Secretary — delivered by an AI workforce under qualified human supervision.">
+  <Navigation />
+
+  <main>
+    <section class="section page-head" aria-labelledby="ph">
+      <div class="container">
+        <p class="eyebrow">Services</p>
+        <h1 class="display" style="font-size:var(--text-xl);line-height:1.05;letter-spacing:-0.015em" id="ph">Services.</h1>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="grid-3">
+          {SERVICES.map(s => (<ServiceCard id={s.id} title={s.title} description={s.description} bundles={s.bundles} />))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" aria-labelledby="fl-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em;color:var(--paper)" id="fl-h">MAS licence acquisition.</h2>
+        <p class="section-body" style="max-width:56ch">For a prospective Singapore financial institution applying for an MPI, SPI, or CMS licence. Pre-application strategy through authorisation and transition to managed-service operations.</p>
+        <div class="grid-2" style="margin-top:var(--block-gap)">
+          <ul class="clist">
+            <li>Pre-application strategy and MAS engagement</li>
+            <li>Application drafting — Forms, policy library, risk framework, AML/KYC procedures, IT-risk documentation</li>
+            <li>MAS query response and examination management</li>
+            <li>Licensed officers provided — CO, MLRO, CRO, Head of IA, Company Secretary</li>
+            <li>Director or Nominee Director provision under the Singapore Companies Act</li>
+            <li>Automatic transition to managed-service retainer on authorisation</li>
+          </ul>
+          <div>
+            <p style="font-size:var(--text-base);line-height:1.5;font-weight:300;color:rgba(255,255,255,0.65)">The workforce that builds your operating policies operates them in production. The humans who sign off your application sign off your outputs.</p>
+            <a href="/contact" class="btn btn-primary" style="margin-top:1.25rem">Discuss your application</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="au-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="au-h">How we work.</h2>
+        <div class="grid-2" style="margin-top:var(--block-gap)">
+          <div class="tier"><h3 class="tier-t">AI-led</h3><p class="tier-d">Routine tasks where the workforce operates independently, with periodic human sampling. Sanctions screening, regulatory monitoring, statutory register updates.</p></div>
+          <div class="tier"><h3 class="tier-t">AI-recommended, human-decided</h3><p class="tier-d">Complex analysis where the workforce prepares a recommendation with source citations, and a qualified human reviews and signs off. Board pack drafting, SAR preparation, risk framework amendments.</p></div>
+          <div class="tier"><h3 class="tier-t">Human-led, AI-assisted</h3><p class="tier-d">Strategic or novel situations where the human leads and the workforce provides research, drafting, and verification. MAS examination response, regulatory analysis for new jurisdictions.</p></div>
+          <div class="tier"><h3 class="tier-t">Human-decided</h3><p class="tier-d">Decisions reserved for qualified human judgment. The workforce provides relevant source material only. Legal advice, conflict-of-interest determinations.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
+  .clist { list-style: none; display: grid; gap: 0.5rem; }
+  .clist li { font-size: var(--text-sm); color: rgba(255,255,255,0.65); padding-left: 1.25rem; position: relative; line-height: 1.5; }
+  .clist li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
+  .tier { border-top: var(--rule); padding-top: 1.5rem; }
+  .tier-t { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .tier-d { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; margin-top: 0.25rem; }
+</style>

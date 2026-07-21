@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../content/site.config';
+---
+<Base title={`${SITE.name} / Platform`} description="Three layers — AI specialists, AI workforce orchestration, human governance.">
+  <Navigation />
+
+  <main>
+    <section class="section page-head" aria-labelledby="ph">
+      <div class="container">
+        <p class="eyebrow">Platform</p>
+        <h1 class="display" style="font-size:var(--text-xl);line-height:1.05;letter-spacing:-0.015em" id="ph">The operating system<br/>for regulated financial services.</h1>
+      </div>
+    </section>
+
+    <section class="section section-alt" aria-labelledby="lay-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="lay-h">Three layers. One operating model.</h2>
+        <div class="layers" style="margin-top:var(--block-gap)">
+          <div class="layer"><span class="number" style="font-size:var(--text-2xl);line-height:1" aria-hidden="true">1</span><div><h3 class="lay-t">AI Specialists</h3><p class="lay-b">~1,000 role-specialised agents. Each has a registered identity, a defined scope, a qualified human supervisor, and a versioned methodology. They are designed organisational roles — employees whose payroll is compute.</p></div></div>
+          <div class="layer"><span class="number" style="font-size:var(--text-2xl);line-height:1" aria-hidden="true">2</span><div><h3 class="lay-t">AI Workforce Orchestration</h3><p class="lay-b">Specialists orchestrated by AI supervisors. Work routed, quality monitored, exceptions escalated. The workforce operates continuously across all six service lines. Ambiguity is escalated, resolved, and codified so no question needs answering twice.</p></div></div>
+          <div class="layer"><span class="number" style="font-size:var(--text-2xl);line-height:1" aria-hidden="true">3</span><div><h3 class="lay-t">Human Governance</h3><p class="lay-b">~10 senior humans govern at the edge. They write the founding principles, amend the governance framework when law or strategy changes, resolve escalations the system cannot, and sign regulatory outputs. The workforce operates itself within the framework they wrote.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="iso-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em" id="iso-h">Per-client isolation.</h2>
+        <p class="section-body">Every client receives a dedicated AI workforce instance. No shared state. No cross-client data flow. Per-client encryption keys. Per-client immutable audit ledger.</p>
+        <div class="grid-3" style="margin-top:var(--block-gap)">
+          <div><h3 class="iso-t">Dedicated instances</h3><p class="iso-d">Each client's workforce runs in an isolated environment. Role designs are shared; instances, data, and state are not.</p></div>
+          <div><h3 class="iso-t">Per-client encryption</h3><p class="iso-d">AES-256 at rest with per-client KMS keys. TLS 1.3 in transit. Bring-your-own-key supported.</p></div>
+          <div><h3 class="iso-t">Immutable audit ledger</h3><p class="iso-d">Every action witnessed. Every decision traceable. Cryptographically signed, end-to-end. 7-year-plus retention matching MAS requirements.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" aria-labelledby="esc-h">
+      <div class="container">
+        <h2 class="display" style="font-size:var(--text-lg);line-height:1.08;letter-spacing:-0.01em;color:var(--paper)" id="esc-h">Ambiguity escalates.<br/>The system never guesses.</h2>
+        <div class="esc" style="margin-top:var(--block-gap)">
+          <div class="esc-step"><span class="number" style="font-size:var(--text-xl);line-height:1">1</span><div><h3 class="esc-t" style="color:var(--paper)">Specialist encounters ambiguity</h3><p class="esc-d">A specialist encounters a situation its scope does not cover. It signals. It does not guess, improvise, or fall back to a generic response.</p></div></div>
+          <div class="esc-step"><span class="number" style="font-size:var(--text-xl);line-height:1">2</span><div><h3 class="esc-t" style="color:var(--paper)">Escalation protocol resolves</h3><p class="esc-d">The system queries the governance framework, checks peer specialists, and searches the audit ledger for precedent. If resolvable, guidance returns.</p></div></div>
+          <div class="esc-step"><span class="number" style="font-size:var(--text-xl);line-height:1">3</span><div><h3 class="esc-t" style="color:var(--paper)">Human resolves. Precedent is codified.</h3><p class="esc-d">If the system cannot resolve, a qualified human decides. The decision is recorded. If it represents a new principle, the governance framework is amended. The same ambiguity never escalates twice.</p></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<style>
+  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
+  .layers { display: grid; gap: 0; }
+  .layer { display: grid; grid-template-columns: 3.5rem 1fr; gap: 2.5rem; padding-block: 2.5rem; align-items: start; }
+  .layer + .layer { border-top: var(--rule); }
+  @media (min-width: 36rem) { .layer { grid-template-columns: 6rem 1fr; gap: 3rem; } }
+  .lay-t { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .lay-b { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; margin-top: 0.35rem; }
+  .iso-t { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+  .iso-d { font-size: var(--text-sm); color: var(--ink-light); line-height: 1.55; margin-top: 0.25rem; }
+  .esc { display: grid; gap: 0; }
+  .esc-step { display: grid; grid-template-columns: 3.5rem 1fr; gap: 2rem; padding-block: 2rem; border-top: 1px solid rgba(255,255,255,0.08); align-items: start; }
+  @media (min-width: 36rem) { .esc-step { grid-template-columns: 6rem 1fr; } }
+  .esc-t { font-size: var(--text-md); font-weight: 500; }
+  .esc-d { font-size: var(--text-sm); color: rgba(255,255,255,0.4); line-height: 1.55; margin-top: 0.25rem; }
+</style>
