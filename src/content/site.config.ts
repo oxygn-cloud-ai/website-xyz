@@ -17,38 +17,32 @@ export const SERVICES = [
   {
     id: 'governance',
     title: 'Governance',
-    description: 'Board pack drafting, policy lifecycle management, regulatory radar, mandatory registers. Four bundles covering every statutory governance obligation.',
-    bundles: 'G1–G4',
+    description: 'Board pack drafting, policy lifecycle management, regulatory radar, mandatory registers — every statutory governance obligation.',
   },
   {
     id: 'risk',
     title: 'Risk',
     description: 'Enterprise risk framework, operational risk monitoring, financial risk modelling, model validation. Including AI/ML model validation for client-deployed systems.',
-    bundles: 'R1–R4',
   },
   {
     id: 'compliance',
     title: 'Compliance',
     description: 'Continuous KYC, transaction monitoring, SAR drafting, sanctions screening, regulatory reporting. MAS-recognised Compliance Officer and MLRO provided as named officers.',
-    bundles: 'C1–C4',
   },
   {
     id: 'legal',
     title: 'Legal',
     description: 'Contract suite, regulatory paperwork, corporate-secretarial advisory, employment and IP notices. All outputs supervised by an admitted Singapore lawyer in-house.',
-    bundles: 'L1–L4',
   },
   {
     id: 'internal-audit',
     title: 'Internal Audit',
     description: 'Independent third-line assurance. Risk-based audit planning, fieldwork, regulatory submission. IIA-qualified auditors on staff. Operationally separate from Compliance and Risk.',
-    bundles: 'IA1–IA3',
   },
   {
     id: 'company-secretary',
     title: 'Company Secretary',
     description: 'Statutory filings, AGM and EGM management, board minutes, ACRA lodgements, share registry. Chartered Secretaries Institute of Singapore qualified. Direct Section 171 appointment.',
-    bundles: 'CS1–CS2',
   },
 ] as const;
 

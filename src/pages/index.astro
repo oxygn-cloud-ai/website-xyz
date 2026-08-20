@@ -1,48 +1,184 @@
 ---
 import Base from '../layouts/Base.astro';
 import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
-import ServiceCard from '../components/ServiceCard.astro';
 import { SITE, SERVICES } from '../content/site.config';
 ---
+
 <Base title={`${SITE.name} / AI-native governance, risk, and compliance`} description={SITE.tagline}>
   <Navigation />
 
   <main>
-    <section class="section" aria-labelledby="hero-h" style="text-align:center;padding-block-end:1rem">
-      <div class="container">
-        <h1 class="hero-title" id="hero-h">The cost of execution collapsed.<br/>The cost of governance didn't.</h1>
-        <p class="hero-sub">Six service lines. One AI workforce. Continuous, auditable, regulator-grade delivery for Singapore-licensed financial institutions.</p>
-        <div class="hero-acts">
-          <a href="/platform" class="btn btn-primary">See how it works</a>
-          <a href="/contact" class="btn btn-outline">Request a demo</a>
+    <!-- Hero -->
+    <section class="section" style="text-align:center;padding-block:5rem 3.5rem">
+      <div class="container" style="max-width:42rem">
+        <p style="font-weight:600;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1.5rem">
+          Singapore-licensed financial institutions
+        </p>
+        <h1 style="font-size:var(--text-3xl);font-weight:700;line-height:1.06;letter-spacing:-0.03em;margin-bottom:1rem">
+          The cost of execution collapsed. The cost of governance didn't.
+        </h1>
+        <p style="font-size:var(--text-lg);color:var(--ink-light);margin-bottom:1.75rem">
+          Six service lines. One integrated AI workforce. Continuous, auditable, regulator-grade delivery.
+        </p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+          <a href="/contact" class="btn btn-primary">Request a demo</a>
+          <a href="#services" class="btn btn-outline">Explore services</a>
         </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="svc-h">
+    <!-- Divider -->
+    <div style="border-top:1px solid var(--border)"></div>
+
+    <!-- Services -->
+    <section class="section" id="services">
       <div class="container">
+        <p style="font-weight:600;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem">Services</p>
+        <h2 style="font-size:var(--text-2xl);font-weight:700;line-height:1.08;letter-spacing:-0.025em;margin-bottom:2.5rem">
+          Six service lines.<br/>One integrated workforce.
+        </h2>
         <div class="grid-3">
-          {SERVICES.map(s => (<ServiceCard title={s.title} description={s.description} bundles={s.bundles} href="/services" />))}
+          {SERVICES.map(s => (
+            <div style="padding:1.5rem 0;border-top:1px solid var(--border)">
+              <h3 style="font-weight:700;font-size:var(--text-md);margin-bottom:0.4rem">{s.title}</h3>
+              <p style="font-size:var(--text-sm);color:var(--ink-light)">{s.description}</p>
+              <p style="margin-top:0.75rem"><a href="/services" style="font-weight:600;font-size:var(--text-sm);color:var(--ink)">Learn more →</a></p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
-    <section class="section section-dark" style="text-align:center">
+    <!-- Platform -->
+    <section class="section" id="platform" style="background:var(--ink);color:var(--paper)">
       <div class="container">
-        <h2 class="display" style="font-size:var(--text-2xl);line-height:0.96;letter-spacing:-0.02em;color:var(--paper);max-width:20ch;margin:0 auto">Your licence requires a compliance function worth defending.</h2>
-        <p class="section-body" style="max-width:40ch;margin:0.75rem auto 0;text-align:center">We would like to show you how we build one.</p>
-        <div style="margin-top:1.5rem"><a href="/contact" class="btn btn-primary">Request a demo</a></div>
+        <p style="font-weight:600;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1rem">Platform</p>
+        <h2 style="font-size:var(--text-2xl);font-weight:700;line-height:1.08;letter-spacing:-0.025em;margin-bottom:2.5rem">
+          The operating system for<br/>regulated financial services.
+        </h2>
+        <div class="grid-2">
+          <div style="padding:1.5rem 0;border-top:1px solid rgba(255,255,255,0.1)">
+            <p style="font-family:var(--font);font-size:3rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.5rem">1</p>
+            <h3 style="font-weight:700;font-size:var(--text-lg);margin-bottom:0.4rem;color:var(--paper)">AI Specialists</h3>
+            <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.5)">~1,000 role-specialised agents. Each has a registered identity, a defined scope, a qualified human supervisor, and a versioned methodology. Purpose-built for distinct regulatory processes.</p>
+          </div>
+          <div style="padding:1.5rem 0;border-top:1px solid rgba(255,255,255,0.1)">
+            <p style="font-family:var(--font);font-size:3rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.5rem">2</p>
+            <h3 style="font-weight:700;font-size:var(--text-lg);margin-bottom:0.4rem;color:var(--paper)">AI Workforce Orchestration</h3>
+            <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.5)">Specialists orchestrated by AI supervisors. Work routed, quality monitored, exceptions escalated. Ambiguity is escalated, resolved, and codified so no question needs answering twice.</p>
+          </div>
+          <div style="padding:1.5rem 0;border-top:1px solid rgba(255,255,255,0.1)">
+            <p style="font-family:var(--font);font-size:3rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.5rem">3</p>
+            <h3 style="font-weight:700;font-size:var(--text-lg);margin-bottom:0.4rem;color:var(--paper)">Human Governance</h3>
+            <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.5)">~10 senior humans govern at the edge. Admitted Singapore lawyer. MAS-recognised officers. IIA-qualified auditors. CSIS-qualified company secretaries. Every output passes qualified review.</p>
+          </div>
+          <div style="padding:1.5rem 0;border-top:1px solid rgba(255,255,255,0.1)">
+            <p style="font-family:var(--font);font-size:3rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:0.5rem">4</p>
+            <h3 style="font-weight:700;font-size:var(--text-lg);margin-bottom:0.4rem;color:var(--paper)">Per-Client Isolation</h3>
+            <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.5)">Every client receives a dedicated AI workforce instance. AES-256 at rest with per-client KMS keys. Immutable audit ledger. No cross-client data flow by architecture.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust -->
+    <section class="section" id="trust">
+      <div class="container">
+        <p style="font-weight:600;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:1rem">Trust & Security</p>
+        <h2 style="font-size:var(--text-2xl);font-weight:700;line-height:1.08;letter-spacing:-0.025em;margin-bottom:2.5rem">
+          Enterprise-grade security.<br/>Regulatory-grade defensibility.
+        </h2>
+        <div class="grid-3">
+          {[
+            {t:'SOC 2 Type II',d:'Annual audit with client-disclosable attestations.'},
+            {t:'ISO 27001 / 27017 / 27018',d:'Information security, cloud security, data protection.'},
+            {t:'MAS Notice 644',d:'Cyber-incident posture maintained for all clients.'},
+            {t:'Annual penetration testing',d:'Third-party testing. Reports available on request.'},
+            {t:'Continuous red-team exercises',d:'External security assessment, always running.'},
+            {t:'Singapore data residency',d:'Default Singapore-region. Per-market expansion.'},
+            {t:'Per-client encryption',d:'AES-256 with per-client KMS keys. BYOK supported.'},
+            {t:'Immutable audit ledger',d:'Every action witnessed. 7-year-plus retention.'},
+            {t:'Right to audit',d:'Audit Oxygn at any time, without notice.'}
+          ].map(s => (
+            <div style="padding:1rem 0;border-top:1px solid var(--border)">
+              <p style="font-weight:700;font-size:var(--text-sm);margin-bottom:0.2rem">{s.t}</p>
+              <p style="font-size:var(--text-xs);color:var(--ink-light)">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about" style="background:var(--ink);color:var(--paper)">
+      <div class="container">
+        <p style="font-weight:600;font-size:var(--text-xs);letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:1rem">About</p>
+        <h2 style="font-size:var(--text-2xl);font-weight:700;line-height:1.08;letter-spacing:-0.025em;margin-bottom:2.5rem">
+          We come from<br/>financial services.
+        </h2>
+        <div class="grid-2" style="align-items:start">
+          <div>
+            <p style="font-size:var(--text-base);color:rgba(255,255,255,0.65);margin-bottom:0.75rem">
+              Every financial institution that scales rebuilds the same functions — compliance, finance, governance, operations, risk — and staffs each one from scratch. The cost scales linearly. The output does not.
+            </p>
+            <p style="font-size:var(--text-base);color:rgba(255,255,255,0.65)">
+              Fourteen countries. Every shape of financial institution — neobank, insurer, sovereign fund. Our team includes an admitted Singapore lawyer, MAS-recognised compliance officers, IIA-qualified internal auditors, and CSIS-qualified company secretaries.
+            </p>
+            <p style="font-weight:700;color:var(--paper);margin-top:1rem">James Shanahan, CEO &amp; Founder</p>
+          </div>
+          <div style="display:grid;gap:1px;background:rgba(255,255,255,0.08);border-radius:var(--radius);overflow:hidden">
+            {[
+              {t:'Per-client isolation',d:'Dedicated AI workforce instance, separate encryption keys, separate audit ledger.'},
+              {t:'Human sign-off',d:'Every regulator-facing output reviewed by a qualified human supervisor before submission.'},
+              {t:'Immutable audit trail',d:'Every action witnessed. Every decision traceable. Cryptographically signed.'}
+            ].map(s => (
+              <div style="background:var(--ink);padding:1.25rem">
+                <p style="font-weight:700;font-size:var(--text-sm);color:var(--paper);margin-bottom:0.2rem">{s.t}</p>
+                <p style="font-size:var(--text-xs);color:rgba(255,255,255,0.5)">{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="text-align:center">
+      <div class="container" style="max-width:36rem">
+        <h2 style="font-size:var(--text-2xl);font-weight:700;line-height:1.08;letter-spacing:-0.025em;margin-bottom:0.75rem">
+          Put your compliance function<br/>on auto-pilot.
+        </h2>
+        <p style="font-size:var(--text-base);color:var(--ink-light);margin-bottom:1.5rem">
+          Book a conversation. Walk through your regulatory obligations and how we would structure your engagement.
+        </p>
+        <a href="/contact" class="btn btn-primary">Request a demo</a>
       </div>
     </section>
   </main>
 
-  <Footer />
+  <!-- Footer -->
+  <footer style="border-top:1px solid var(--border);padding:4rem 0 2rem">
+    <div class="container">
+      <div class="grid-2" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+        <div>
+          <p style="font-weight:700;font-size:var(--text-md);margin-bottom:0.5rem">oxygn</p>
+          <p style="font-size:var(--text-sm);color:var(--ink-light);max-width:24ch">{SITE.tagline}</p>
+          <p style="font-size:var(--text-sm);color:var(--ink-faint);margin-top:1rem"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:0.75rem">Services</p>
+          {['Governance','Risk','Compliance','Legal','Internal Audit','Company Secretary'].map(s => <p style="font-size:var(--text-sm);color:var(--ink-light);margin-bottom:0.4rem"><a href="/services">{s}</a></p>)}
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:0.75rem">Company</p>
+          {['Platform','Trust & Security','About','Resources','Contact'].map(s => <p style="font-size:var(--text-sm);color:var(--ink-light);margin-bottom:0.4rem"><a href={`/${s.toLowerCase().replace(/ & /g,'-').replace(/ /g,'-')}`}>{s}</a></p>)}
+        </div>
+        <div>
+          <p style="font-weight:700;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-faint);margin-bottom:0.75rem">Markets</p>
+          {['Singapore (MAS)','ADGM (FSRA)','Hong Kong (SFC)','UK (FCA)','DIFC (DFSA)'].map(s => <p style="font-size:var(--text-sm);color:var(--ink-light);margin-bottom:0.4rem">{s}</p>)}
+        </div>
+      </div>
+      <p style="font-size:var(--text-xs);color:var(--ink-faint);margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border)">&copy; {new Date().getFullYear()} Oxygn Pte Ltd. Singapore. oxygn.xyz</p>
+    </div>
+  </footer>
 </Base>
-
-<style>
-  .hero-title { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: var(--text-3xl); line-height: 0.94; letter-spacing: -0.025em; color: var(--ink); max-width: 16ch; margin: 0 auto; }
-  .hero-sub { font-size: var(--text-base); color: var(--ink-light); max-width: 44ch; margin: 1rem auto 0; line-height: 1.5; }
-  .hero-acts { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.5rem; }
-  .section-body { font-size: var(--text-base); line-height: 1.55; color: var(--ink-light); max-width: var(--measure); margin-top: 0.75rem; }
-</style>
