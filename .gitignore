@@ -8,6 +8,8 @@ dist/
 .output/
 .vercel/
 .netlify/
+.next/
+.wrangler/
 
 # env
 .env
