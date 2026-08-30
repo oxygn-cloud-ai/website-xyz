@@ -27,7 +27,7 @@ export const SERVICES = [
   {
     id: 'compliance',
     title: 'Compliance',
-    description: 'Continuous KYC, transaction monitoring, SAR drafting, sanctions screening, regulatory reporting. Compliance Officer and MLRO provided as named officers, recognised by MAS in the client's name.',
+    description: 'Continuous KYC, transaction monitoring, SAR drafting, sanctions screening, regulatory reporting. MAS-recognised Compliance Officer and MLRO provided as named officers.',
   },
   {
     id: 'legal',
