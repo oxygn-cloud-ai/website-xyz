@@ -9,7 +9,9 @@
 <meta property="og:description" content="Regulation scales. Headcount shouldn’t.">
 <meta property="og:url" content="https://oxygn.xyz/">
 <meta name="theme-color" content="#FEFEFE">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231E1E1E'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%238DB3FF' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Fragment+Mono&display=swap" rel="stylesheet">
@@ -29,6 +31,8 @@ a{color:inherit}
 nav{position:fixed;inset:0 0 auto;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
 nav a{pointer-events:auto;background:var(--paper);padding:.35rem .6rem;font-size:1.1rem;text-decoration:none;font-weight:500}
 nav a.cta{background:var(--ink);color:var(--paper)}
+nav a.logo{display:flex;align-items:center;padding:.4rem .7rem}
+nav a.logo img{display:block;height:2.1rem;width:auto}
 
 /* display type */
 .display{font-weight:500;letter-spacing:-.045em;line-height:.82;font-size:clamp(3.4rem,10.4vw,9.4rem);text-align:center}
@@ -130,13 +134,13 @@ dialog .done h2{font-size:1.6rem}
 button.cta-btn{font:inherit;cursor:pointer;border:0}
 
 footer{background:var(--ink);color:var(--paper);padding:4rem var(--pad) 1.2rem;overflow:hidden}
-footer .word{font:500 clamp(5rem,24vw,22rem)/.75 var(--grot);letter-spacing:-.06em;text-align:center}
+footer .word{display:block;width:min(56rem,100%);height:auto;margin:0 auto}
 footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;color:#aaa}
 </style>
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
-<nav aria-label="Primary"><a href="#top">Oxygn</a><a class="cta" href="#talk" data-talk>Talk to us</a></nav>
+<nav aria-label="Primary"><a class="logo" href="#top"><img src="/assets/oxygn-logo-black.png" alt="Oxygn AI" width="1544" height="636"></a><a class="cta" href="#talk" data-talk>Talk to us</a></nav>
 
 <header class="sky" id="top">
   <div class="win mono" role="note">
@@ -232,7 +236,7 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
 </dialog>
 
 <footer>
-  <div class="word" aria-hidden="true">oxygn</div>
+  <img class="word" src="/assets/oxygn-logo-white.png" alt="Oxygn AI" width="1544" height="636" loading="lazy">
   <div class="row mono"><span>Oxygn Pte Ltd, Singapore</span><span>hello@oxygn.xyz</span></div>
 </footer>
 
