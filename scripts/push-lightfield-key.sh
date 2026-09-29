@@ -11,6 +11,8 @@ set -euo pipefail
 
 SRC=${1:-LIGHTFIELD_API_KEY}
 [[ "$SRC" =~ ^[A-Z][A-Z0-9_]*$ ]] || { echo "Invalid variable name: $SRC" >&2; exit 1; }
+# The full-scope key must never leave this machine (owner instruction).
+[ "$SRC" != LIGHTFIELD_API_KEY_FULL ] || { echo "Refusing: LIGHTFIELD_API_KEY_FULL must never be given to Vercel or any third party." >&2; exit 1; }
 KEY=${!SRC:-}
 [ -n "$KEY" ] || { echo "$SRC not set (run under bws run)" >&2; exit 1; }
 SITE_DIR="$(cd "$(dirname "$0")/../site" && pwd)"
