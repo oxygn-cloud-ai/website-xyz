@@ -33,11 +33,21 @@ async function post(fetchImpl, url, headers, body) {
   }
 }
 
+// Lightfield's SOCIAL_HANDLE only accepts a canonical profile URL, and a bad
+// value fails the whole create, so anything unrecognisable is left to the note.
+function linkedInUrl(raw) {
+  const m = /(?:^|[/.])linkedin\.com\/(in|company)\/([^/?#\s]+)/i.exec(raw);
+  return m ? `https://www.linkedin.com/${m[1].toLowerCase()}/${m[2]}` : null;
+}
+
 async function saveToLightfield(f, key, d) {
   const h = { Authorization: `Bearer ${key}`, 'Lightfield-Version': LF_VERSION };
   const [firstName, ...rest] = d.name.split(/\s+/);
   const $name = rest.length ? { firstName, lastName: rest.join(' ') } : { firstName };
-  const contact = await post(f, `${LF}/contacts`, h, { fields: { $email: [d.email], $name } });
+  const fields = { $email: [d.email], $name };
+  const $linkedIn = linkedInUrl(d.linkedin);
+  if ($linkedIn) fields.$linkedIn = $linkedIn;
+  const contact = await post(f, `${LF}/contacts`, h, { fields });
   if (!contact?.id) return false;
   const $content = [
     d.message, '',

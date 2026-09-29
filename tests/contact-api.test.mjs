@@ -52,6 +52,28 @@ test('happy path: Lightfield contact + linked note, then email from the site', a
   assert.match(email.body.text, /MAS reporting/);
 });
 
+for (const [input, expected] of [
+  ['linkedin.com/in/adatan', 'https://www.linkedin.com/in/adatan'],
+  ['https://www.linkedin.com/in/ada-tan-123/', 'https://www.linkedin.com/in/ada-tan-123'],
+  ['http://sg.linkedin.com/in/adatan?trk=x', 'https://www.linkedin.com/in/adatan'],
+  ['www.linkedin.com/company/example-bank', 'https://www.linkedin.com/company/example-bank'],
+]) {
+  test(`LinkedIn "${input}" is normalised onto the contact's $linkedIn field`, async () => {
+    const f = fakeFetch();
+    await handleContact({ ...valid, linkedin: input }, env, f);
+    assert.equal(f.calls[0].body.fields.$linkedIn, expected);
+  });
+}
+
+for (const input of ['adatan', 'https://example.com/in/adatan', 'linkedin.com/feed', '']) {
+  test(`unrecognisable LinkedIn "${input}" is left off the contact (so the create can't fail) but kept in the note`, async () => {
+    const f = fakeFetch();
+    await handleContact({ ...valid, linkedin: input }, env, f);
+    assert.equal('$linkedIn' in f.calls[0].body.fields, false);
+    if (input) assert.match(f.calls[1].body.fields.$content, new RegExp(input.replace(/[.?/]/g, '\\$&')));
+  });
+}
+
 test('single-word name has no lastName', async () => {
   const f = fakeFetch();
   await handleContact({ ...valid, name: 'Cher' }, env, f);
