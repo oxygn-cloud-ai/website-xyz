@@ -12,18 +12,23 @@ const valid = {
 };
 const env = { LIGHTFIELD_API_KEY: 'lf', RESEND_API_KEY: 're' };
 
-// Records every outbound call; responds per URL with the supplied status.
-function fakeFetch(statuses = {}) {
+// Records every outbound call. `statuses` maps a URL (without query) to an HTTP
+// status; `lookup` is the JSON body returned for a contacts list GET.
+function fakeFetch(statuses = {}, lookup = { data: [] }) {
   const calls = [];
-  const fn = async (url, init) => {
-    calls.push({ url, init, body: JSON.parse(init.body) });
-    const status = statuses[url] ?? 200;
-    const id = url.endsWith('/contacts') ? 'con_1' : url.endsWith('/notes') ? 'note_1' : 'em_1';
+  const fn = async (url, init = {}) => {
+    const method = init.method || 'GET';
+    const base = url.split('?')[0];
+    calls.push({ url, base, method, init, body: init.body ? JSON.parse(init.body) : null });
+    const status = statuses[`${method} ${base}`] ?? statuses[base] ?? 200;
+    if (method === 'GET') return new Response(JSON.stringify(lookup), { status });
+    const id = base.endsWith('/contacts') ? 'con_1' : base.endsWith('/notes') ? 'note_1' : 'em_1';
     return new Response(JSON.stringify({ id }), { status });
   };
   fn.calls = calls;
   return fn;
 }
+const existing = email => ({ data: [{ id: 'con_old', fields: { $email: { value: [email], valueType: 'EMAIL' } } }] });
 const LF_CONTACTS = 'https://api.lightfield.app/v1/contacts';
 const LF_NOTES = 'https://api.lightfield.app/v1/notes';
 const RESEND = 'https://api.resend.com/emails';
@@ -136,6 +141,51 @@ test('note failure is not fatal once the contact exists', async () => {
   const r = await handleContact(valid, env, f);
   assert.equal(r.status, 200);
   assert.ok(f.calls.some(c => c.url === RESEND));
+});
+
+test('existing contact (409): note is attached to the contact found by email', async () => {
+  const f = fakeFetch({ [`POST ${LF_CONTACTS}`]: 409 }, existing('ada@bank.example'));
+  const r = await handleContact(valid, env, f);
+  assert.equal(r.status, 200);
+  const get = f.calls.find(c => c.method === 'GET');
+  assert.equal(get.base, LF_CONTACTS);
+  assert.equal(new URL(get.url).searchParams.get('$email[contains]'), 'ada@bank.example');
+  const note = f.calls.find(c => c.base === LF_NOTES);
+  assert.equal(note.body.relationships.$contact, 'con_old');
+  assert.doesNotMatch(f.calls.at(-1).body.text, /NOT saved to Lightfield/);
+});
+
+test('existing contact match is exact and case-insensitive', async () => {
+  const f = fakeFetch({ [`POST ${LF_CONTACTS}`]: 409 }, existing('ADA@bank.example'));
+  await handleContact(valid, env, f);
+  assert.equal(f.calls.find(c => c.base === LF_NOTES).body.relationships.$contact, 'con_old');
+});
+
+test('409 but lookup only finds a different address: standalone note naming the email', async () => {
+  const f = fakeFetch({ [`POST ${LF_CONTACTS}`]: 409 }, existing('xada@bank.example'));
+  const r = await handleContact(valid, env, f);
+  assert.equal(r.status, 200);
+  const note = f.calls.find(c => c.base === LF_NOTES);
+  assert.equal(note.body.relationships, undefined);
+  assert.match(note.body.fields.$title, /ada@bank\.example/);
+});
+
+test('409 and lookup forbidden (key lacks contacts:read): standalone note still saves the enquiry', async () => {
+  const f = fakeFetch({ [`POST ${LF_CONTACTS}`]: 409, [`GET ${LF_CONTACTS}`]: 403 });
+  const r = await handleContact(valid, env, f);
+  assert.equal(r.status, 200);
+  const note = f.calls.find(c => c.base === LF_NOTES);
+  assert.ok(note);
+  assert.equal(note.body.relationships, undefined);
+  assert.match(note.body.fields.$content, /MAS reporting/);
+  assert.doesNotMatch(f.calls.at(-1).body.text, /NOT saved to Lightfield/);
+});
+
+test('409 and the note also fails: email warns that Lightfield has nothing', async () => {
+  const f = fakeFetch({ [`POST ${LF_CONTACTS}`]: 409, [`POST ${LF_NOTES}`]: 500 }, existing('ada@bank.example'));
+  const r = await handleContact(valid, env, f);
+  assert.equal(r.status, 200);
+  assert.match(f.calls.at(-1).body.text, /NOT saved to Lightfield/);
 });
 
 test('email down but Lightfield saved: still success', async () => {

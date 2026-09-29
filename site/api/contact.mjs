@@ -23,14 +23,19 @@ function clean(data) {
   return out;
 }
 
-async function post(fetchImpl, url, headers, body) {
+// Returns { status, json }; status 0 means the request never got a response.
+async function request(fetchImpl, method, url, headers, body) {
   try {
-    const r = await fetchImpl(url, { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) });
-    if (!r.ok) return null;
-    return await r.json().catch(() => ({}));
+    const r = await fetchImpl(url, { method, headers: { 'Content-Type': 'application/json', ...headers }, ...(body ? { body: JSON.stringify(body) } : {}) });
+    return { status: r.status, json: await r.json().catch(() => ({})) };
   } catch {
-    return null;
+    return { status: 0, json: null };
   }
+}
+const ok = r => r.status >= 200 && r.status < 300;
+async function post(fetchImpl, url, headers, body) {
+  const r = await request(fetchImpl, 'POST', url, headers, body);
+  return ok(r) ? r.json : null;
 }
 
 // Lightfield's SOCIAL_HANDLE only accepts a canonical profile URL, and a bad
@@ -40,6 +45,18 @@ function linkedInUrl(raw) {
   return m ? `https://www.linkedin.com/${m[1].toLowerCase()}/${m[2]}` : null;
 }
 
+// Lightfield rejects a second contact with the same email (409), so an existing
+// contact is looked up and the enquiry attached to it. The list endpoint needs
+// contacts:read and reads a lagging search index, so when no exact match comes
+// back the enquiry is still saved as a standalone note naming the email.
+async function findContactId(f, h, email) {
+  const r = await request(f, 'GET', `${LF}/contacts?${new URLSearchParams({ '$email[contains]': email, limit: '5' })}`, h);
+  if (!ok(r)) { console.error('lightfield contact lookup failed', r.status); return null; }
+  const want = email.toLowerCase();
+  const hit = (r.json?.data ?? []).find(c => [].concat(c.fields?.$email?.value ?? []).some(e => String(e).toLowerCase() === want));
+  return hit?.id ?? null;
+}
+
 async function saveToLightfield(f, key, d) {
   const h = { Authorization: `Bearer ${key}`, 'Lightfield-Version': LF_VERSION };
   const [firstName, ...rest] = d.name.split(/\s+/);
@@ -47,18 +64,26 @@ async function saveToLightfield(f, key, d) {
   const fields = { $email: [d.email], $name };
   const $linkedIn = linkedInUrl(d.linkedin);
   if ($linkedIn) fields.$linkedIn = $linkedIn;
-  const contact = await post(f, `${LF}/contacts`, h, { fields });
-  if (!contact?.id) return false;
+
+  const created = await request(f, 'POST', `${LF}/contacts`, h, { fields });
+  let contactId = ok(created) ? created.json?.id : null;
+  const existing = created.status === 409;
+  if (!contactId && !existing) { console.error('lightfield contact create failed', created.status, created.json?.error?.type ?? ''); return false; }
+  if (existing) contactId = await findContactId(f, h, d.email);
+
   const $content = [
     d.message, '',
+    `Name: ${d.name}`, `Email: ${d.email}`,
     `Company: ${d.company}`,
     d.domain ? `Domain: ${d.domain}` : null,
     d.linkedin ? `LinkedIn: ${d.linkedin}` : null,
   ].filter(x => x !== null).join('\n');
-  // The contact is the lead; a failed note is logged but not fatal.
-  const note = await post(f, `${LF}/notes`, h, { fields: { $title: `Website enquiry: ${d.company}`, $content }, relationships: { $contact: contact.id } });
-  if (!note) console.error('lightfield note create failed for contact', contact.id);
-  return true;
+  const $title = contactId ? `Website enquiry: ${d.company}` : `Website enquiry: ${d.company} (${d.email})`;
+  const note = await post(f, `${LF}/notes`, h, { fields: { $title, $content }, ...(contactId ? { relationships: { $contact: contactId } } : {}) });
+  if (!note) console.error('lightfield note create failed', contactId ?? '(standalone)');
+  // A new contact is the lead even if its note fails; for an existing contact
+  // the note is the only new record, so it must succeed.
+  return existing ? !!note : true;
 }
 
 async function sendEmail(f, env, d, savedToCrm) {
@@ -93,7 +118,6 @@ export async function handleContact(data, env, fetchImpl = fetch) {
   }
 
   const saved = hasLf ? await saveToLightfield(fetchImpl, env.LIGHTFIELD_API_KEY, d) : null;
-  if (saved === false) console.error('lightfield contact create failed');
   const mailed = hasMail ? await sendEmail(fetchImpl, env, d, saved) : null;
   if (mailed === false) console.error('resend email failed');
 

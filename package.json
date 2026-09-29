@@ -1,6 +1,6 @@
 {
   "name": "website-xyz",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": true,
   "engines": { "node": ">=22.13.0" },
   "scripts": { "dev": "vinext dev", "build": "vinext build", "start": "vinext start", "test": "node --experimental-strip-types --test tests/contact-validation.test.ts tests/contact-api.test.mjs" },
