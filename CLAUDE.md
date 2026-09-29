@@ -9,10 +9,10 @@ project-specific context.
 - **Name:** website-xyz
 - **Type:** Software — static multi-page marketing website
 - **Description:** oxygn.xyz — multi-page marketing site (8 pages). AI-native GRC+L for regulated FIs.
-- **Version:** 0.4.1 (see `package.json`)
+- **Version:** 0.4.2 (see `package.json`)
 - **Repo:** `oxygn-cloud-ai/website-xyz`
 - **Jira epic:** `AI1-293`
-- **Hosting:** Cloudflare Pages (Git Integration; build on push to main)
+- **Hosting:** oxygn.xyz is a single static page in `site/`, deployed to Vercel project `oxygn-xyz` (team OxygnAI) with `cd site && vercel deploy --prod`. DNS stays at GoDaddy.
 
 ## Stack
 
