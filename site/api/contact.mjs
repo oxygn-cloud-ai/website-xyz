@@ -59,7 +59,7 @@ async function sendEmail(f, env, d, savedToCrm) {
     savedToCrm === false ? 'Warning: this enquiry was NOT saved to Lightfield. Add it manually.' : null,
   ].filter(x => x !== null);
   const r = await post(f, 'https://api.resend.com/emails', { Authorization: `Bearer ${env.RESEND_API_KEY}` }, {
-    from: env.RESEND_FROM || 'Oxygn website <onboarding@resend.dev>',
+    from: env.RESEND_FROM || (env.RESEND_EMAIL_DOMAIN ? `Oxygn website <website@${env.RESEND_EMAIL_DOMAIN}>` : 'Oxygn website <onboarding@resend.dev>'),
     to: [TO],
     reply_to: d.email,
     subject: `Website enquiry: ${d.name}, ${d.company}`,

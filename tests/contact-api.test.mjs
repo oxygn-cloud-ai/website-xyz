@@ -154,6 +154,18 @@ test('RESEND_FROM overrides the sender', async () => {
   assert.equal(f.calls.at(-1).body.from, 'Oxygn <web@oxygn.xyz>');
 });
 
+test('RESEND_EMAIL_DOMAIN (set by the Vercel integration) becomes the sender domain', async () => {
+  const f = fakeFetch();
+  await handleContact(valid, { ...env, RESEND_EMAIL_DOMAIN: 'oxygn.xyz' }, f);
+  assert.equal(f.calls.at(-1).body.from, 'Oxygn website <website@oxygn.xyz>');
+});
+
+test('RESEND_FROM still wins over RESEND_EMAIL_DOMAIN', async () => {
+  const f = fakeFetch();
+  await handleContact(valid, { ...env, RESEND_EMAIL_DOMAIN: 'oxygn.xyz', RESEND_FROM: 'X <x@oxygn.xyz>' }, f);
+  assert.equal(f.calls.at(-1).body.from, 'X <x@oxygn.xyz>');
+});
+
 test('POST: invalid JSON body is a 400', async () => {
   const r = await POST(new Request('https://x/api/contact', { method: 'POST', body: '{nope' }));
   assert.equal(r.status, 400);
