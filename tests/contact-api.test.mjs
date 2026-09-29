@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleContact, POST } from '../site/api/contact.mjs';
+import { handleContact, handlePost, POST } from '../site/api/contact.mjs';
 
 const valid = {
   name: 'Ada Tan',
@@ -353,13 +353,135 @@ test('BotID runs before Kickbox, so bots never spend Kickbox credits', async () 
   assert.equal(f.calls.some(c => c.base === KB), false);
 });
 
-test('POST: invalid JSON body is a 400', async () => {
-  const r = await POST(new Request('https://x/api/contact', { method: 'POST', body: '{nope' }));
-  assert.equal(r.status, 400);
+// --- POST: server-rendered HTML ------------------------------------------------
+test('POST takes only the request (Vercel passes its own 2nd argument, which must not become env)', () => {
+  assert.equal(POST.length, 1);
 });
 
-test('POST: returns JSON', async () => {
-  const r = await POST(new Request('https://x/api/contact', { method: 'POST', body: JSON.stringify({}) }));
+const formBody = obj => new URLSearchParams(obj).toString();
+const req = (body, headers = {}) => new Request('https://oxygn.xyz/api/contact', {
+  method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...headers },
+});
+const FETCH = { 'X-Requested-With': 'fetch' };
+const noEnv = {};
+
+test('POST (fetch): form-encoded success returns an HTML thank-you fragment', async () => {
+  const r = await handlePost(req(formBody(valid), FETCH), env, fakeFetch(), { checkBot: human });
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get('content-type'), /text\/html/);
+  assert.equal(r.headers.get('cache-control'), 'no-store');
+  const html = await r.text();
+  assert.match(html, /Thanks/);
+  assert.doesNotMatch(html, /<html/i);
+  assert.doesNotMatch(html, /<script/i);
+});
+
+test('POST (fetch): validation error returns an HTML error fragment with the status', async () => {
+  const r = await handlePost(req(formBody({ ...valid, company: '' }), FETCH), env, fakeFetch(), { checkBot: human });
   assert.equal(r.status, 400);
-  assert.equal(typeof (await r.json()).error, 'string');
+  const html = await r.text();
+  assert.match(html, /role="alert"/);
+  assert.match(html, /company/);
+});
+
+test('POST (plain browser, no JS): returns a full HTML page with a way back', async () => {
+  const r = await handlePost(req(formBody(valid)), env, fakeFetch(), { checkBot: human });
+  assert.equal(r.status, 200);
+  const html = await r.text();
+  assert.match(html, /^<!doctype html>/i);
+  assert.match(html, /href="\/"/);
+  assert.doesNotMatch(html, /<script/i);
+});
+
+test('POST (plain browser): a bot verdict gives a full page pointing to email', async () => {
+  const r = await handlePost(req(formBody(valid)), env, fakeFetch(), { checkBot: bot });
+  assert.equal(r.status, 403);
+  assert.match(await r.text(), /hello@oxygn\.xyz/);
+});
+
+test('POST: untrusted text echoed back is HTML-escaped', async () => {
+  const evil = 'x@evil.example"><script>alert(1)</script>';
+  const f = kbFetch({ success: true, result: 'undeliverable', did_you_mean: evil });
+  const r = await handlePost(req(formBody(valid), FETCH), kbEnv, f, { checkBot: human });
+  const html = await r.text();
+  assert.doesNotMatch(html, /<script>/);
+  assert.match(html, /&lt;script&gt;/);
+});
+
+test('POST: JSON bodies are still accepted', async () => {
+  const r = await handlePost(new Request('https://oxygn.xyz/api/contact', { method: 'POST', body: JSON.stringify(valid), headers: { 'Content-Type': 'application/json', ...FETCH } }), env, fakeFetch(), { checkBot: human });
+  assert.equal(r.status, 200);
+});
+
+test('POST: malformed body is a 400 and never reaches BotID', async () => {
+  let called = false;
+  const r = await handlePost(new Request('https://oxygn.xyz/api/contact', { method: 'POST', body: '{nope', headers: { 'Content-Type': 'application/json', ...FETCH } }), env, fakeFetch(), { checkBot: async () => { called = true; return { isBot: false }; } });
+  assert.equal(r.status, 400);
+  assert.equal(called, false);
+});
+
+test('POST: oversized body is rejected before parsing', async () => {
+  const r = await handlePost(req('message=' + 'x'.repeat(40000), FETCH), env, fakeFetch(), { checkBot: human });
+  assert.equal(r.status, 413);
+});
+
+// --- Cross-site protection ---------------------------------------------------
+function spyDeps() {
+  const d = { called: false, checkBot: async () => { d.called = true; return { isBot: false }; } };
+  return d;
+}
+
+test('POST from another website (Origin mismatch) is refused before any work', async () => {
+  const f = fakeFetch(), d = spyDeps();
+  const r = await handlePost(req(formBody(valid), { ...FETCH, Origin: 'https://evil.example' }), env, f, d);
+  assert.equal(r.status, 403);
+  assert.match(await r.text(), /hello@oxygn\.xyz/);
+  assert.equal(d.called, false);
+  assert.equal(f.calls.length, 0);
+});
+
+test('Origin on a different port or scheme of our host is still refused', async () => {
+  for (const origin of ['http://oxygn.xyz', 'https://oxygn.xyz:8443', 'https://oxygn.xyz.evil.example']) {
+    const r = await handlePost(req(formBody(valid), { ...FETCH, Origin: origin }), env, fakeFetch(), spyDeps());
+    assert.equal(r.status, 403, origin);
+  }
+});
+
+test('Origin "null" (sandboxed iframe, data: page) is refused', async () => {
+  const r = await handlePost(req(formBody(valid), { ...FETCH, Origin: 'null' }), env, fakeFetch(), spyDeps());
+  assert.equal(r.status, 403);
+});
+
+test('Sec-Fetch-Site cross-site or same-site is refused even without Origin', async () => {
+  for (const site of ['cross-site', 'same-site']) {
+    const r = await handlePost(req(formBody(valid), { ...FETCH, 'Sec-Fetch-Site': site }), env, fakeFetch(), spyDeps());
+    assert.equal(r.status, 403, site);
+  }
+});
+
+test('same-origin browser request is accepted', async () => {
+  const d = spyDeps();
+  const r = await handlePost(req(formBody(valid), { ...FETCH, Origin: 'https://oxygn.xyz', 'Sec-Fetch-Site': 'same-origin' }), env, fakeFetch(), d);
+  assert.equal(r.status, 200);
+  assert.equal(d.called, true);
+});
+
+test('www host posting to itself is accepted', async () => {
+  const r = await handlePost(new Request('https://www.oxygn.xyz/api/contact', {
+    method: 'POST', body: formBody(valid),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...FETCH, Origin: 'https://www.oxygn.xyz' },
+  }), env, fakeFetch(), spyDeps());
+  assert.equal(r.status, 200);
+});
+
+test('no Origin and no Sec-Fetch-Site (non-browser client) is left to BotID', async () => {
+  const d = spyDeps();
+  await handlePost(req(formBody(valid), FETCH), env, fakeFetch(), d);
+  assert.equal(d.called, true);
+});
+
+test('POST: no configuration still renders an HTML error, not a crash', async () => {
+  const r = await handlePost(req(formBody(valid), FETCH), noEnv, fakeFetch(), { checkBot: human });
+  assert.equal(r.status, 500);
+  assert.match(await r.text(), /hello@oxygn\.xyz/);
 });

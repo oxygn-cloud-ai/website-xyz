@@ -167,11 +167,78 @@ async function botId() {
   return checkBotId({ advancedOptions: { checkLevel: 'deepAnalysis' } });
 }
 
-export async function POST(request) {
-  let data;
-  try { data = await request.json(); } catch { data = null; }
-  const r = data && typeof data === 'object'
-    ? await handleContact(data, process.env, fetch, { checkBot: botId })
+// --- Server-rendered responses ------------------------------------------------
+// The page ships no UI logic: the enquiry script swaps in the fragment below,
+// and a browser without JavaScript gets a full page.
+const MAX_BODY = 32 * 1024;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+function fragment(status, body) {
+  if (status === 200) {
+    return '<div class="done"><h2>Thanks. We’ve got it.</h2>'
+      + '<p class="sub">Someone from Oxygn will reply to the email you gave us.</p>'
+      + '<a class="send" href="#_">Close</a></div>';
+  }
+  return `<p class="msg err" role="alert">${esc(body.error ?? 'Something went wrong. Please email hello@oxygn.xyz.')}</p>`;
+}
+
+function page(status, body) {
+  const ok = status === 200;
+  const title = ok ? 'Thanks. We’ve got it.' : 'We couldn’t send that';
+  const text = ok ? 'Someone from Oxygn will reply to the email you gave us.' : esc(body.error ?? 'Something went wrong.');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oxygn</title><link rel="stylesheet" href="/assets/site.css"></head>
+<body class="result"><main class="talk"><h1 class="display sm">${esc(title)}</h1><p>${text}</p>
+<a class="btn" href="/">Back to oxygn.xyz</a>${ok ? '' : ' <a class="btn" href="/#enquire">Try again</a>'}</main></body></html>`;
+}
+
+async function readBody(request) {
+  const len = Number(request.headers.get('content-length') ?? 0);
+  if (len > MAX_BODY) return { tooBig: true };
+  const raw = await request.text();
+  if (raw.length > MAX_BODY) return { tooBig: true };
+  const type = request.headers.get('content-type') ?? '';
+  try {
+    if (type.includes('application/json')) {
+      const v = JSON.parse(raw);
+      return { data: v && typeof v === 'object' && !Array.isArray(v) ? v : null };
+    }
+    return { data: Object.fromEntries(new URLSearchParams(raw)) };
+  } catch {
+    return { data: null };
+  }
+}
+
+// Vercel calls POST(request, context): never take env from a positional argument.
+export function POST(request) {
+  return handlePost(request, process.env, fetch, { checkBot: botId });
+}
+
+// Browsers stamp every POST with Origin (and Sec-Fetch-Site), which a page on
+// another site cannot forge, so cross-site form posts and fetches are refused
+// here. Non-browser clients can send any headers; BotID handles those.
+function crossSite(request) {
+  const site = request.headers.get('sec-fetch-site');
+  if (site && site !== 'same-origin' && site !== 'none') return true;
+  const origin = request.headers.get('origin');
+  return origin !== null && origin !== new URL(request.url).origin;
+}
+
+export async function handlePost(request, env, fetchImpl, deps) {
+  const viaScript = request.headers.get('x-requested-with') === 'fetch';
+  if (crossSite(request)) {
+    const r = json(403, { error: 'This form only accepts submissions from oxygn.xyz. Please email hello@oxygn.xyz.' });
+    return new Response(viaScript ? fragment(r.status, r.body) : page(r.status, r.body), {
+      status: 403, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
+    });
+  }
+  const { data, tooBig } = await readBody(request);
+  const r = tooBig ? json(413, { error: 'That message is too long. Please shorten it.' })
+    : data ? await handleContact(data, env, fetchImpl, deps)
     : json(400, { error: 'Invalid request.' });
-  return Response.json(r.body, { status: r.status });
+  const html = viaScript ? fragment(r.status, r.body) : page(r.status, r.body);
+  return new Response(html, {
+    status: r.status,
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
+  });
 }
