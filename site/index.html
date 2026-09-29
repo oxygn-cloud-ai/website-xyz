@@ -6,138 +6,187 @@
 <title>Oxygn</title>
 <meta name="description" content="An AI workforce for governance, risk, compliance, legal, audit and company secretarial work. It does the work continuously; qualified people sign it off.">
 <meta property="og:title" content="Oxygn">
-<meta property="og:description" content="Regulation scales. Your headcount shouldn’t have to.">
+<meta property="og:description" content="Regulation scales. Headcount shouldn’t.">
 <meta property="og:url" content="https://oxygn.xyz/">
-<meta name="theme-color" content="#F4F6F5">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%232446D6' stroke-width='5'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#FEFEFE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231E1E1E'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%238DB3FF' stroke-width='4'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F4F6F5; --ink:#15213B; --slate:#5A6472; --rule:#C8D0CD; --pen:#2446D6;
-  --measure:36rem; --gutter:clamp(1rem,5vw,4rem);
+  --paper:#FEFEFE; --ink:#1E1E1E; --air:#8DB3FF; --sage:#ABBAB9; --mist:#DEDEDE;
+  --grot:"Inter Tight",Helvetica,Arial,sans-serif; --mono:"Fragment Mono",ui-monospace,Menlo,monospace;
+  --pad:clamp(1rem,4vw,6.25rem);
 }
-*{box-sizing:border-box;margin:0}
-html{-webkit-text-size-adjust:100%}
-body{background:var(--paper);color:var(--ink);font:400 1.125rem/1.65 "Source Serif 4",Georgia,serif;font-optical-sizing:auto}
-a{color:var(--pen);text-underline-offset:.18em;text-decoration-thickness:1px}
-a:hover{text-decoration-thickness:2px}
-:focus-visible{outline:2px solid var(--pen);outline-offset:3px}
-.wrap{max-width:68rem;margin:0 auto;padding:0 var(--gutter)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 1.25rem/1.3 var(--grot);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.mono{font:400 .8125rem/1.35 var(--mono)}
 
-header{padding:1.75rem 0}
-.mark{font-weight:700;font-size:1.35rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+/* nav: typesafe-style tiles floating on the sky */
+nav{position:fixed;inset:0 0 auto;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
+nav a{pointer-events:auto;background:var(--paper);padding:.35rem .6rem;font-size:1.1rem;text-decoration:none;font-weight:500}
+nav a.cta{background:var(--ink);color:var(--paper)}
 
-.hero{padding:clamp(3rem,10vw,7rem) 0 clamp(3rem,8vw,5rem)}
-h1{font-size:clamp(2.6rem,7.5vw,5.25rem);line-height:1.02;letter-spacing:-.025em;font-weight:600;max-width:17ch}
-h1 span{display:block}
-h1 span+span{color:var(--slate);font-weight:400}
-.lead{font-size:clamp(1.2rem,2.2vw,1.4rem);line-height:1.5;max-width:var(--measure);margin-top:1.75rem;color:var(--ink)}
+/* display type */
+.display{font-weight:500;letter-spacing:-.045em;line-height:.82;font-size:clamp(3.4rem,10.4vw,9.4rem);text-align:center}
+.display.sm{font-size:clamp(2.6rem,6.2vw,5.6rem);line-height:.88}
 
-/* the signature block: the page's one memorable moment */
-.sign{margin-top:clamp(2.5rem,6vw,4rem);max-width:24rem}
-.sign svg{display:block;width:100%;height:auto;overflow:visible}
-.sign path{fill:none;stroke:var(--pen);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s .5s cubic-bezier(.6,.05,.3,1) forwards}
-.sign .line{border-top:1px solid var(--ink);margin-top:.25rem;padding-top:.5rem;font-size:.95rem;color:var(--slate)}
-@keyframes draw{to{stroke-dashoffset:0}}
-@media (prefers-reduced-motion:reduce){.sign path{animation:none;stroke-dashoffset:0}}
+/* hero */
+.sky{position:relative;min-height:32rem;display:grid;place-items:center;padding:6rem var(--pad) 4rem;overflow:hidden;isolation:isolate}
+.sky::before{content:"";position:absolute;inset:-10%;z-index:-2;filter:blur(18px);
+  -webkit-mask-image:linear-gradient(#000 55%,transparent 98%);mask-image:linear-gradient(#000 55%,transparent 98%);
+  background:
+    radial-gradient(38% 60% at 6% 20%,#6F9BFF 0,transparent 72%),
+    radial-gradient(30% 55% at 26% 70%,#A9C6FF 0,transparent 70%),
+    radial-gradient(34% 58% at 94% 18%,#B08CFF 0,transparent 72%),
+    radial-gradient(30% 50% at 78% 62%,#7FA8FF 0,transparent 70%),
+    radial-gradient(26% 40% at 52% 8%,#FFFFFF 0,transparent 70%),
+    #D6E4FF}
+.sky::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.55;mix-blend-mode:multiply;pointer-events:none;
+  -webkit-mask-image:linear-gradient(#000 50%,transparent 95%);mask-image:linear-gradient(#000 50%,transparent 95%);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .5 0 0 0 0 .75 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.win{position:relative;z-index:1;width:min(23rem,100%);background:var(--mist);border:1px solid var(--ink);box-shadow:inset 0 0 0 3px var(--mist),inset 0 0 0 4px var(--ink)}
+.win .bar{background:var(--ink);color:var(--paper);padding:.2rem .5rem;display:flex;justify-content:space-between}
+.win .in{padding:.85rem 1rem 1rem;text-align:center}
+.win .in b{font-weight:400;display:block;margin-bottom:.35rem}
+.win .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
+.leader{display:flex;gap:.4rem;justify-content:center;align-items:baseline;font-weight:500;font-size:1.05rem;padding:2rem var(--pad) 0}
+.leader{white-space:nowrap;font-size:clamp(.9rem,2.8vw,1.05rem)}
+.leader i{flex:0 1 12rem;min-width:1.5rem;border-bottom:2px dotted currentColor;transform:translateY(-.25rem)}
+.headline{position:relative;padding:2.5rem var(--pad) 6rem}
+.hash{position:absolute;left:calc(var(--pad) * .6);top:3rem;writing-mode:vertical-rl;transform:rotate(180deg);font:400 .625rem var(--mono);letter-spacing:.02em;opacity:.8}
+.headline .display span{display:block}
+@media (max-width:56rem){.hash{display:none}}
 
-section.part{border-top:1px solid var(--rule);padding:clamp(2.5rem,6vw,4rem) 0;display:grid;gap:1rem 3rem;grid-template-columns:1fr}
-@media (min-width:52rem){section.part{grid-template-columns:13rem 1fr}}
-h2{font-size:1.05rem;font-weight:600;color:var(--slate);line-height:1.4;padding-top:.3rem}
-.body{max-width:var(--measure)}
-.body p+p{margin-top:1rem}
-.big{font-size:clamp(1.35rem,2.6vw,1.7rem);line-height:1.4;letter-spacing:-.01em}
+/* bands */
+.band{padding:clamp(4rem,8vw,7rem) var(--pad)}
+.band.air{background:var(--air)}
+.band.sage{background:var(--sage)}
+.band.dark{background:var(--ink);color:var(--paper)}
+.crop{position:relative;padding:.5rem 0 1.5rem;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.crop::before,.crop::after{content:"";position:absolute;width:10px;height:10px;border:1px solid currentColor}
+.crop::before{left:0;bottom:0;border-top:0;border-right:0}
+.crop::after{right:0;bottom:0;border-top:0;border-left:0}
 
-dl{display:grid;gap:1.25rem}
-dt{font-weight:600}
-dd{color:var(--slate)}
+.cols{display:grid;gap:2.5rem 2rem;grid-template-columns:1fr}
+@media (min-width:56rem){.cols.three{grid-template-columns:1fr 1fr .8fr}.cols.grid{grid-template-columns:repeat(3,1fr)}}
+.col{border-left:1px solid currentColor;padding-left:.6rem}
+.col .mono{display:block;margin-bottom:1.6rem}
+.col p{font-size:clamp(1.15rem,1.6vw,1.45rem);line-height:1.2;max-width:24rem}
+.col.small p{font-size:1.05rem;line-height:1.3}
+.ledger{font:400 .75rem/1.25 var(--mono);word-break:break-all;align-self:start}
+.ledger span{display:block;margin-bottom:.8rem}
 
-ol{padding:0;list-style:none;counter-reset:s;display:grid;gap:1.25rem}
-ol li{counter-increment:s;display:grid;grid-template-columns:2rem 1fr}
-ol li::before{content:counter(s);font-weight:600;color:var(--pen)}
-ol b{display:block}
-ol span{color:var(--slate)}
+/* the terminal: one regulated task, start to sign-off */
+.term{max-width:46rem;margin:0 auto;border:1px solid #555;background:#141414}
+.term .bar{display:flex;justify-content:space-between;padding:.35rem .7rem;border-bottom:1px solid #555;color:#aaa}
+.term ol{list-style:none;padding:1rem .9rem 1.2rem;font:400 clamp(.75rem,1.4vw,.9rem)/1.7 var(--mono);color:#d6d6d6}
+.term li{display:grid;grid-template-columns:7.5rem 1fr;gap:.8rem}
+.term li b{font-weight:400;color:var(--air)}
+.term li.ok b,.term li.ok{color:#fff}
+.term li.ok em{font-style:normal;background:var(--air);color:var(--ink);padding:0 .35rem}
+@media (max-width:34rem){.term li{grid-template-columns:1fr;gap:0;margin-bottom:.5rem}}
+.js .term li{opacity:0}
+.js .term.run li{animation:line .01s forwards}
+.term.run li:nth-child(2){animation-delay:.6s}.term.run li:nth-child(3){animation-delay:1.2s}
+.term.run li:nth-child(4){animation-delay:1.8s}.term.run li:nth-child(5){animation-delay:2.4s}
+.term.run li:nth-child(6){animation-delay:3.2s}
+@keyframes line{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.js .term li{opacity:1;animation:none}}
+.caption{text-align:center;margin-top:2.5rem;font-size:clamp(1.1rem,1.6vw,1.35rem);max-width:34rem;margin-inline:auto;color:#cfcfcf}
 
-ul.plain{padding:0;list-style:none;display:grid;gap:1.25rem}
-ul.plain b{display:block}
-ul.plain span{color:var(--slate)}
+.talk{text-align:center;padding:clamp(5rem,10vw,8rem) var(--pad)}
+.talk p{margin:2rem auto 2.5rem;max-width:32rem;font-size:clamp(1.15rem,1.6vw,1.4rem)}
+.talk a.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font:500 clamp(1.3rem,2.4vw,2rem) var(--grot);padding:.6rem 1.3rem;letter-spacing:-.02em}
+.talk a.btn:hover{background:#000}
 
-.contact .big a{font-weight:600}
-
-footer{border-top:1px solid var(--rule);padding:2rem 0 3rem;font-size:.95rem;color:var(--slate)}
+footer{background:var(--ink);color:var(--paper);padding:4rem var(--pad) 1.2rem;overflow:hidden}
+footer .word{font:500 clamp(5rem,24vw,22rem)/.75 var(--grot);letter-spacing:-.06em;text-align:center}
+footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;color:#aaa}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header><a class="mark" href="/" aria-label="Oxygn home">oxygn</a></header>
+<script>document.documentElement.classList.add('js')</script>
+<nav aria-label="Primary"><a href="#top">Oxygn</a><a class="cta" href="mailto:hello@oxygn.xyz">Talk to us</a></nav>
 
-  <main>
-    <section class="hero" aria-labelledby="h">
-      <h1 id="h"><span>Regulation scales.</span> <span>Your headcount shouldn’t have&nbsp;to.</span></h1>
-      <p class="lead">Oxygn is an AI workforce for governance, risk, compliance, legal, audit and company secretarial work. It does the work continuously. Qualified people sign it off.</p>
-      <div class="sign" aria-hidden="true">
-        <svg viewBox="0 0 320 90"><path pathLength="1" d="M22 66C8 38 48 6 60 28c11 20-24 46-18 28 6-17 34-26 44-8 6 11 12 10 20-6 6-12 10 16 18 10s12-20 20-6c6 10 14 6 22-12 5-10 8 30 18 20 9-9 20-18 28-8 7 9 16 4 26-6M34 80c90-14 180-20 272-24"/></svg>
-        <div class="line">Reviewed and approved by a qualified professional</div>
-      </div>
-    </section>
+<header class="sky" id="top">
+  <div class="win mono" role="note">
+    <div class="bar"><span>oxygn workforce</span><span>● live</span></div>
+    <div class="in"><b>Regulatory change detected</b>Obligations mapped, policies updated, awaiting qualified sign-off<br><a class="btn" href="#how">Watch it work</a></div>
+  </div>
+</header>
 
-    <section class="part" aria-labelledby="p1">
-      <h2 id="p1">The problem</h2>
-      <div class="body">
-        <p class="big">Every institution that grows rebuilds compliance, risk and governance from scratch, and pays for it one hire at a time.</p>
-        <p>The rulebook keeps expanding. Advisers are fragmented, work passes between too many hands, and evidence lives in inboxes. The cost curve only goes one way.</p>
-      </div>
-    </section>
+<main>
+  <p class="leader">AI execution <i aria-hidden="true"></i> Human authority</p>
+  <section class="headline" aria-labelledby="h">
+    <span class="hash" aria-hidden="true">ledger 7f3a9c2e41b8d06f5a17c3e9b2d48f60 · witnessed</span>
+    <h1 class="display" id="h"><span>Regulation scales.</span> <span>Headcount shouldn’t.</span></h1>
+  </section>
 
-    <section class="part" aria-labelledby="p2">
-      <h2 id="p2">What Oxygn does</h2>
-      <div class="body">
-        <dl>
-          <div><dt>Governance</dt><dd>Board packs, policy lifecycle, regulatory change and statutory registers.</dd></div>
-          <div><dt>Risk</dt><dd>Risk frameworks, operational monitoring, financial modelling and model validation.</dd></div>
-          <div><dt>Compliance</dt><dd>Ongoing KYC, transaction monitoring, suspicious activity reports, sanctions screening and regulatory reporting.</dd></div>
-          <div><dt>Legal</dt><dd>Contracts, regulatory paperwork, corporate advisory, employment and IP notices.</dd></div>
-          <div><dt>Internal audit</dt><dd>Independent assurance from risk-based planning through fieldwork to submission.</dd></div>
-          <div><dt>Company secretary</dt><dd>Statutory filings, meetings, minutes and share registers.</dd></div>
-        </dl>
-      </div>
-    </section>
+  <section class="band air" aria-labelledby="p">
+    <div class="crop"><h2 class="display" id="p">Every institution rebuilds compliance from scratch</h2></div>
+    <div class="cols three">
+      <div class="col"><span class="mono">The problem</span><p>It grows, so it hires. Compliance, risk, legal and governance get rebuilt one person at a time, advisers fragment, and the evidence ends up in inboxes. The cost curve only goes one way.</p></div>
+      <div class="col"><span class="mono">Our answer</span><p>An AI workforce that does the work continuously, inside your controls, with a qualified professional signing off everything that matters.</p></div>
+      <div class="ledger" aria-hidden="true"><span>[ledger.entry]</span>a91f07c3e5d24b8f6e0c19ab7d3f52e8c4b60a9d1e7f3c25b8a04d6e9f1c73b2a5d80e4f6c19b3a7d2e05f8c4a61b9d3e7f20c5a8b4d16e9f3c72a0b5d8e4f1c6a93b7d2e0f5c8a4b61d9e3f7c20a5b8d4e1f6c93a7b2d0e5f8c4a6b1d9e3f7c2a0b5d8e4f1c6a9</div>
+    </div>
+  </section>
 
-    <section class="part" aria-labelledby="p3">
-      <h2 id="p3">How the work gets done</h2>
-      <div class="body">
-        <ol>
-          <li><div><b>Specialists do the work</b><span>Narrow, role-specific AI agents handle each task.</span></div></li>
-          <li><div><b>Supervisors route and check it</b><span>Work is assigned, quality is monitored and exceptions are escalated.</span></div></li>
-          <li><div><b>A qualified person signs it off</b><span>Nothing reaches a regulator without human approval.</span></div></li>
-        </ol>
-      </div>
-    </section>
+  <section class="band" aria-labelledby="w">
+    <div class="crop"><h2 class="display sm" id="w">Six functions. One workforce.</h2></div>
+    <div class="cols grid">
+      <div class="col small"><span class="mono">Governance</span><p>Board packs, policy lifecycle, regulatory change and statutory registers.</p></div>
+      <div class="col small"><span class="mono">Risk</span><p>Risk frameworks, operational monitoring, financial modelling and model validation.</p></div>
+      <div class="col small"><span class="mono">Compliance</span><p>Ongoing KYC, transaction monitoring, suspicious activity reports, sanctions screening and regulatory reporting.</p></div>
+      <div class="col small"><span class="mono">Legal</span><p>Contracts, regulatory paperwork, corporate advisory, employment and IP notices.</p></div>
+      <div class="col small"><span class="mono">Internal audit</span><p>Independent assurance from risk-based planning through fieldwork to submission.</p></div>
+      <div class="col small"><span class="mono">Company secretary</span><p>Statutory filings, meetings, minutes and share registers.</p></div>
+    </div>
+  </section>
 
-    <section class="part" aria-labelledby="p4">
-      <h2 id="p4">Why you can rely on it</h2>
-      <div class="body">
-        <ul class="plain">
-          <li><b>Your own instance</b><span>A separate workforce, encryption keys, data boundary and audit ledger for each client.</span></li>
-          <li><b>Every action on the record</b><span>An immutable trail of what was done, by which agent, and who approved it.</span></li>
-          <li><b>Open to inspection</b><span>Evidence and controls available to you and your regulator on request.</span></li>
-        </ul>
-      </div>
-    </section>
+  <section class="band dark" id="how" aria-labelledby="hw">
+    <div class="crop"><h2 class="display sm" id="hw">The work is done by AI. The decision is made by people.</h2></div>
+    <div class="term" id="term">
+      <div class="bar mono"><span>task · suspicious activity report</span><span>client instance</span></div>
+      <ol>
+        <li><b>specialist</b><span>Flagged an unusual pattern across linked accounts</span></li>
+        <li><b>specialist</b><span>Drafted the report with supporting evidence</span></li>
+        <li><b>supervisor</b><span>Checked it against policy and prior filings</span></li>
+        <li><b>supervisor</b><span>Escalated for qualified review</span></li>
+        <li><b>reviewer</b><span>Read it, amended one finding, approved</span></li>
+        <li class="ok"><b>ledger</b><span><em>Signed off</em> · every step recorded</span></li>
+      </ol>
+    </div>
+    <p class="caption">Specialists do the work. Supervisors route and check it. Nothing reaches a regulator without a qualified person’s approval.</p>
+  </section>
 
-    <section class="part contact" aria-labelledby="p5">
-      <h2 id="p5">Talk to us</h2>
-      <div class="body">
-        <p class="big">Tell us what your function looks like today. We’ll show you what it looks like with Oxygn.</p>
-        <p class="big"><a href="mailto:hello@oxygn.xyz">hello@oxygn.xyz</a></p>
-      </div>
-    </section>
-  </main>
+  <section class="band sage" aria-labelledby="t">
+    <div class="crop"><h2 class="display sm" id="t">Built to be inspected</h2></div>
+    <div class="cols grid">
+      <div class="col"><span class="mono">Your own instance</span><p>A separate workforce, encryption keys, data boundary and audit ledger for each client.</p></div>
+      <div class="col"><span class="mono">Every action on the record</span><p>What was done, by which agent, and who approved it. Permanently.</p></div>
+      <div class="col"><span class="mono">Open to your regulator</span><p>Evidence and controls available to you and your supervisor on request.</p></div>
+    </div>
+  </section>
 
-  <footer>Oxygn Pte Ltd, Singapore</footer>
-</div>
+  <section class="talk" aria-labelledby="c">
+    <h2 class="display" id="c">Talk to us</h2>
+    <p>Tell us what your function looks like today. We’ll show you what it looks like with Oxygn.</p>
+    <a class="btn" href="mailto:hello@oxygn.xyz">hello@oxygn.xyz</a>
+  </section>
+</main>
+
+<footer>
+  <div class="word" aria-hidden="true">oxygn</div>
+  <div class="row mono"><span>Oxygn Pte Ltd, Singapore</span><a href="mailto:hello@oxygn.xyz">hello@oxygn.xyz</a></div>
+</footer>
+
+<script>
+const t=document.getElementById('term');
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){t.classList.add('run');o.disconnect()}},{threshold:.4}).observe(t);
+</script>
 </body>
 </html>
