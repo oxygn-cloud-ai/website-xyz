@@ -77,6 +77,7 @@ async function saveToLightfield(f, key, d) {
     `Company: ${d.company}`,
     d.domain ? `Domain: ${d.domain}` : null,
     d.linkedin ? `LinkedIn: ${d.linkedin}` : null,
+    d.emailCheck ?? null,
   ].filter(x => x !== null).join('\n');
   const $title = contactId ? `Website enquiry: ${d.company}` : `Website enquiry: ${d.company} (${d.email})`;
   const note = await post(f, `${LF}/notes`, h, { fields: { $title, $content }, ...(contactId ? { relationships: { $contact: contactId } } : {}) });
@@ -86,10 +87,29 @@ async function saveToLightfield(f, key, d) {
   return existing ? !!note : true;
 }
 
+// Kickbox: reject addresses that can't receive mail or are throwaway; note the
+// verdict otherwise. Any Kickbox problem (outage, depleted balance) fails open.
+// The key travels in the query string (Kickbox's only option), so the URL is never logged.
+async function checkEmail(f, key, email) {
+  const q = new URLSearchParams({ email, apikey: key, timeout: '4000' });
+  const r = await request(f, 'GET', `https://api.kickbox.com/v2/verify?${q}`, {});
+  const k = r.json;
+  if (!ok(r) || !k?.success) { console.error('kickbox check skipped', r.status, k?.message ?? ''); return {}; }
+  if (k.disposable) return { reject: 'Please use your work email address.' };
+  if (k.result === 'undeliverable') {
+    return { reject: k.did_you_mean
+      ? `That email address doesn’t seem to receive mail. Did you mean ${k.did_you_mean}?`
+      : 'That email address doesn’t seem to receive mail. Please check it and try again.' };
+  }
+  const detail = [k.reason, typeof k.sendex === 'number' ? `sendex ${k.sendex}` : null].filter(Boolean).join(', ');
+  return { note: `Email check: ${k.result}${detail ? ` (${detail})` : ''}` };
+}
+
 async function sendEmail(f, env, d, savedToCrm) {
   const lines = [
     `Name: ${d.name}`, `Email: ${d.email}`, `Company: ${d.company}`,
     d.domain ? `Domain: ${d.domain}` : null, d.linkedin ? `LinkedIn: ${d.linkedin}` : null,
+    d.emailCheck ?? null,
     '', d.message, '',
     savedToCrm === false ? 'Warning: this enquiry was NOT saved to Lightfield. Add it manually.' : null,
   ].filter(x => x !== null);
@@ -103,7 +123,9 @@ async function sendEmail(f, env, d, savedToCrm) {
   return r !== null;
 }
 
-export async function handleContact(data, env, fetchImpl = fetch) {
+// deps.checkBot: returns { isBot } (Vercel BotID). Runs only after the free
+// validation above, so malformed junk never costs a Deep Analysis check.
+export async function handleContact(data, env, fetchImpl = fetch, deps = {}) {
   if (typeof data?.website === 'string' && data.website.trim()) return json(200, { ok: true }); // honeypot
   const d = clean(data);
   if (!d) return json(400, { error: 'Please shorten your answers and try again.' });
@@ -117,6 +139,20 @@ export async function handleContact(data, env, fetchImpl = fetch) {
     return json(500, { error: 'The form is not available right now. Email hello@oxygn.xyz instead.' });
   }
 
+  if (deps.checkBot) {
+    try {
+      if ((await deps.checkBot()).isBot) return json(403, { error: 'We couldn’t verify this submission. Please email hello@oxygn.xyz instead.' });
+    } catch (e) {
+      console.error('botid check failed, allowing submission', e?.message ?? e);
+    }
+  }
+
+  if (env.KICKBOX_API_KEY) {
+    const v = await checkEmail(fetchImpl, env.KICKBOX_API_KEY, d.email);
+    if (v.reject) return json(400, { error: v.reject });
+    if (v.note) d.emailCheck = v.note;
+  }
+
   const saved = hasLf ? await saveToLightfield(fetchImpl, env.LIGHTFIELD_API_KEY, d) : null;
   const mailed = hasMail ? await sendEmail(fetchImpl, env, d, saved) : null;
   if (mailed === false) console.error('resend email failed');
@@ -125,11 +161,17 @@ export async function handleContact(data, env, fetchImpl = fetch) {
   return json(502, { error: 'We couldn’t send that. Please try again, or email hello@oxygn.xyz.' });
 }
 
+// Must match the client's initBotId checkLevel for /api/contact.
+async function botId() {
+  const { checkBotId } = await import('botid/server');
+  return checkBotId({ advancedOptions: { checkLevel: 'deepAnalysis' } });
+}
+
 export async function POST(request) {
   let data;
   try { data = await request.json(); } catch { data = null; }
   const r = data && typeof data === 'object'
-    ? await handleContact(data, process.env)
+    ? await handleContact(data, process.env, fetch, { checkBot: botId })
     : json(400, { error: 'Invalid request.' });
   return Response.json(r.body, { status: r.status });
 }

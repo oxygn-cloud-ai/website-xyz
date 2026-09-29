@@ -238,6 +238,121 @@ test('RESEND_FROM still wins over RESEND_EMAIL_DOMAIN', async () => {
   assert.equal(f.calls.at(-1).body.from, 'X <x@oxygn.xyz>');
 });
 
+// --- BotID -----------------------------------------------------------------
+const human = async () => ({ isBot: false });
+const bot = async () => ({ isBot: true });
+
+test('BotID flags a bot: 403 and nothing is sent anywhere', async () => {
+  const f = fakeFetch();
+  const r = await handleContact(valid, { ...env, KICKBOX_API_KEY: 'kb' }, f, { checkBot: bot });
+  assert.equal(r.status, 403);
+  assert.equal(f.calls.length, 0);
+});
+
+test('invalid input is rejected before BotID runs (no Deep Analysis charge)', async () => {
+  let called = false;
+  const r = await handleContact({ ...valid, email: '' }, env, fakeFetch(), { checkBot: async () => { called = true; return { isBot: false }; } });
+  assert.equal(r.status, 400);
+  assert.equal(called, false);
+});
+
+test('honeypot is rejected before BotID runs', async () => {
+  let called = false;
+  await handleContact({ ...valid, website: 'x' }, env, fakeFetch(), { checkBot: async () => { called = true; return { isBot: false }; } });
+  assert.equal(called, false);
+});
+
+test('BotID outage fails open: the enquiry still goes through', async () => {
+  const f = fakeFetch();
+  const r = await handleContact(valid, env, f, { checkBot: async () => { throw new Error('botid down'); } });
+  assert.equal(r.status, 200);
+  assert.ok(f.calls.some(c => c.base === RESEND));
+});
+
+// --- Kickbox ---------------------------------------------------------------
+const KB = 'https://api.kickbox.com/v2/verify';
+const kbEnv = { ...env, KICKBOX_API_KEY: 'kb' };
+function kbFetch(verdict, statuses = {}) {
+  const inner = fakeFetch(statuses);
+  const fn = async (url, init = {}) => {
+    if (url.startsWith(KB)) {
+      inner.calls.push({ url, base: KB, method: 'GET', init, body: null });
+      if (verdict instanceof Error) throw verdict;
+      return new Response(JSON.stringify(verdict), { status: 200 });
+    }
+    return inner(url, init);
+  };
+  fn.calls = inner.calls;
+  return fn;
+}
+
+test('Kickbox is called with the email, key and a timeout, before anything is saved', async () => {
+  const f = kbFetch({ success: true, result: 'deliverable', sendex: 0.9 });
+  await handleContact(valid, kbEnv, f, { checkBot: human });
+  const u = new URL(f.calls[0].url);
+  assert.equal(u.origin + u.pathname, KB);
+  assert.equal(u.searchParams.get('email'), 'ada@bank.example');
+  assert.equal(u.searchParams.get('apikey'), 'kb');
+  assert.ok(Number(u.searchParams.get('timeout')) > 0);
+});
+
+test('undeliverable address: 400 asking them to check it, nothing saved or sent', async () => {
+  const f = kbFetch({ success: true, result: 'undeliverable', reason: 'rejected_email', did_you_mean: null });
+  const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+  assert.equal(r.status, 400);
+  assert.match(r.body.error, /check/i);
+  assert.equal(f.calls.filter(c => c.base !== KB).length, 0);
+});
+
+test('undeliverable with a typo suggestion: the error offers it', async () => {
+  const f = kbFetch({ success: true, result: 'undeliverable', did_you_mean: 'ada@bank.example.com' });
+  const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+  assert.equal(r.status, 400);
+  assert.match(r.body.error, /ada@bank\.example\.com/);
+});
+
+test('disposable address: 400 asking for a work email', async () => {
+  const f = kbFetch({ success: true, result: 'deliverable', disposable: true });
+  const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+  assert.equal(r.status, 400);
+  assert.match(r.body.error, /work email/i);
+});
+
+for (const result of ['risky', 'unknown']) {
+  test(`"${result}" address is accepted and the verdict is noted for the team`, async () => {
+    const f = kbFetch({ success: true, result, reason: 'accept_all', sendex: 0.4 });
+    const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+    assert.equal(r.status, 200);
+    assert.match(f.calls.find(c => c.base === LF_NOTES).body.fields.$content, new RegExp(result));
+    assert.match(f.calls.find(c => c.base === RESEND).body.text, new RegExp(result));
+  });
+}
+
+test('Kickbox reports failure (e.g. balance depleted): fail open', async () => {
+  const f = kbFetch({ success: false, message: 'Balance Depleted' });
+  const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+  assert.equal(r.status, 200);
+});
+
+test('Kickbox network error: fail open', async () => {
+  const f = kbFetch(new Error('ETIMEDOUT'));
+  const r = await handleContact(valid, kbEnv, f, { checkBot: human });
+  assert.equal(r.status, 200);
+});
+
+test('no KICKBOX_API_KEY: Kickbox is skipped', async () => {
+  const f = kbFetch({ success: true, result: 'undeliverable' });
+  const r = await handleContact(valid, env, f, { checkBot: human });
+  assert.equal(r.status, 200);
+  assert.equal(f.calls.some(c => c.base === KB), false);
+});
+
+test('BotID runs before Kickbox, so bots never spend Kickbox credits', async () => {
+  const f = kbFetch({ success: true, result: 'deliverable' });
+  await handleContact(valid, kbEnv, f, { checkBot: bot });
+  assert.equal(f.calls.some(c => c.base === KB), false);
+});
+
 test('POST: invalid JSON body is a 400', async () => {
   const r = await POST(new Request('https://x/api/contact', { method: 'POST', body: '{nope' }));
   assert.equal(r.status, 400);

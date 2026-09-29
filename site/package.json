@@ -1,0 +1,14 @@
+{
+  "name": "oxygn-xyz-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "esbuild src/botid-client.js --bundle --format=esm --minify --target=es2020 --outfile=assets/botid-client.js"
+  },
+  "dependencies": {
+    "botid": "1.5.11"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
