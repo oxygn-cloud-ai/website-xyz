@@ -3,14 +3,20 @@
 # production env, after checking the key is live and has the scopes the
 # contact form needs. Never prints the key. Intended to be run under bws:
 #
-#   bws run --project-id <bws-project-id> -- ./scripts/push-lightfield-key.sh
+#   bws run --project-id <bws-project-id> -- ./scripts/push-lightfield-key.sh [SOURCE_VAR]
+#
+# SOURCE_VAR names the injected variable holding the key (default
+# LIGHTFIELD_API_KEY). It is always stored in Vercel as LIGHTFIELD_API_KEY.
 set -euo pipefail
 
-: "${LIGHTFIELD_API_KEY:?LIGHTFIELD_API_KEY not set (run under bws run)}"
+SRC=${1:-LIGHTFIELD_API_KEY}
+[[ "$SRC" =~ ^[A-Z][A-Z0-9_]*$ ]] || { echo "Invalid variable name: $SRC" >&2; exit 1; }
+KEY=${!SRC:-}
+[ -n "$KEY" ] || { echo "$SRC not set (run under bws run)" >&2; exit 1; }
 SITE_DIR="$(cd "$(dirname "$0")/../site" && pwd)"
 
 # Header goes to curl on stdin so the key never appears in argv / ps.
-resp=$(printf 'Authorization: Bearer %s\n' "$LIGHTFIELD_API_KEY" |
+resp=$(printf 'Authorization: Bearer %s\n' "$KEY" |
   curl -sS -m 20 -w '\n%{http_code}' -H @- -H 'Lightfield-Version: 2026-03-01' \
     https://api.lightfield.app/v1/auth/validate)
 code=${resp##*$'\n'}
@@ -28,6 +34,6 @@ if [ -n "$scopes" ]; then
   done
 fi
 
-printf '%s' "$LIGHTFIELD_API_KEY" |
+printf '%s' "$KEY" |
   vercel env add LIGHTFIELD_API_KEY production --sensitive --force --cwd "$SITE_DIR" >/dev/null
 echo "LIGHTFIELD_API_KEY set on Vercel project (production)."
