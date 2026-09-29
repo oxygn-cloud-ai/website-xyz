@@ -103,6 +103,32 @@ nav a.cta{background:var(--ink);color:var(--paper)}
 .talk a.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font:500 clamp(1.3rem,2.4vw,2rem) var(--grot);padding:.6rem 1.3rem;letter-spacing:-.02em}
 .talk a.btn:hover{background:#000}
 
+/* talk-to-us dialog, modelled on a retro window */
+dialog{margin:auto;padding:0;border:1px solid var(--ink);background:#D9D9D9;color:var(--ink);width:min(48rem,calc(100% - 2rem));max-height:calc(100dvh - 2rem);box-shadow:inset 0 0 0 3px #D9D9D9,inset 0 0 0 4px var(--ink)}
+dialog::backdrop{background:rgba(30,30,30,.55)}
+dialog .bar{display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:var(--paper);padding:.15rem .15rem .15rem .5rem;position:sticky;top:0}
+dialog .x{background:none;border:0;color:var(--paper);font:400 1.1rem var(--mono);padding:.1rem .55rem;cursor:pointer}
+dialog .body{padding:1rem 1rem 1.1rem}
+dialog h2{font:600 1.3rem/1.2 var(--grot);letter-spacing:-.01em}
+dialog .sub{font-size:1rem;margin:.2rem 0 1.4rem}
+.fgrid{display:grid;grid-template-columns:1fr;gap:1.1rem 1.25rem}
+@media (min-width:40rem){.fgrid{grid-template-columns:1fr 1fr}.fgrid .full{grid-column:1/-1}}
+.fgrid label{display:block;font:500 .8125rem var(--mono);margin-bottom:.45rem}
+.fgrid label i{font-style:normal;color:#2E5BFF}
+.fgrid input,.fgrid textarea{width:100%;font:400 1rem var(--grot);color:var(--ink);background:#CFCFCF;border:1px solid #BDBDBD;padding:.6rem .6rem;border-radius:0}
+.fgrid input::placeholder,.fgrid textarea::placeholder{color:#8f8f8f}
+.fgrid input:focus,.fgrid textarea:focus{outline:2px solid var(--ink);outline-offset:0;background:#E6E6E6}
+.fgrid textarea{min-height:6.5rem;resize:vertical}
+.fgrid .help{font-size:.95rem;margin-top:.45rem;color:#444}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+dialog .send{width:100%;margin-top:1.4rem;background:var(--ink);color:var(--paper);border:0;font:400 1rem var(--mono);padding:.75rem;cursor:pointer}
+dialog .send:disabled{opacity:.6;cursor:progress}
+dialog .msg{min-height:1.4rem;margin-top:.75rem;font-size:1rem}
+dialog .msg.err{color:#B3261E}
+dialog .done{padding:2rem 0 1rem}
+dialog .done h2{font-size:1.6rem}
+button.cta-btn{font:inherit;cursor:pointer;border:0}
+
 footer{background:var(--ink);color:var(--paper);padding:4rem var(--pad) 1.2rem;overflow:hidden}
 footer .word{font:500 clamp(5rem,24vw,22rem)/.75 var(--grot);letter-spacing:-.06em;text-align:center}
 footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;color:#aaa}
@@ -110,7 +136,7 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
-<nav aria-label="Primary"><a href="#top">Oxygn</a><a class="cta" href="mailto:hello@oxygn.xyz">Talk to us</a></nav>
+<nav aria-label="Primary"><a href="#top">Oxygn</a><a class="cta" href="#talk" data-talk>Talk to us</a></nav>
 
 <header class="sky" id="top">
   <div class="win mono" role="note">
@@ -172,21 +198,65 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
     </div>
   </section>
 
-  <section class="talk" aria-labelledby="c">
+  <section class="talk" id="talk" aria-labelledby="c">
     <h2 class="display" id="c">Talk to us</h2>
     <p>Tell us what your function looks like today. We’ll show you what it looks like with Oxygn.</p>
-    <a class="btn" href="mailto:hello@oxygn.xyz">hello@oxygn.xyz</a>
+    <a class="btn" href="#talk" data-talk>Start the conversation</a>
   </section>
 </main>
 
+<dialog id="talk-dialog" aria-labelledby="dlg-title">
+  <div class="bar mono"><span>Let’s talk</span><button class="x" type="button" data-close aria-label="Close">×</button></div>
+  <div class="body">
+    <form id="talk-form" novalidate>
+      <h2 id="dlg-title">What should Oxygn take off your desk?</h2>
+      <p class="sub">Tell us about your function. We’ll reply from hello@oxygn.xyz.</p>
+      <div class="fgrid">
+        <div><label for="f-name">Name<i>*</i></label><input id="f-name" name="name" autocomplete="name" required maxlength="200" placeholder="Ada Tan"></div>
+        <div><label for="f-email">Work email<i>*</i></label><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="ada@yourbank.com"></div>
+        <div><label for="f-company">Company name<i>*</i></label><input id="f-company" name="company" autocomplete="organization" required maxlength="200" placeholder="Your institution"></div>
+        <div><label for="f-domain">Company domain</label><input id="f-domain" name="domain" maxlength="200" placeholder="yourbank.com"></div>
+        <div class="full"><label for="f-linkedin">Your LinkedIn profile</label><input id="f-linkedin" name="linkedin" maxlength="300" placeholder="linkedin.com/in/your-name"><p class="help">Helps us know who we’re talking to</p></div>
+        <div class="full"><label for="f-message">How can we help?<i>*</i></label><textarea id="f-message" name="message" required maxlength="5000" placeholder="Tell us what you’d like Oxygn to take on"></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" tabindex="-1" autocomplete="off"></div>
+      </div>
+      <button class="send" type="submit">Submit →</button>
+      <p class="msg" role="status" aria-live="polite"></p>
+    </form>
+    <div class="done" hidden>
+      <h2>Thanks. We’ve got it.</h2>
+      <p class="sub">Someone from Oxygn will reply to the email you gave us.</p>
+      <button class="send" type="button" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
 <footer>
   <div class="word" aria-hidden="true">oxygn</div>
-  <div class="row mono"><span>Oxygn Pte Ltd, Singapore</span><a href="mailto:hello@oxygn.xyz">hello@oxygn.xyz</a></div>
+  <div class="row mono"><span>Oxygn Pte Ltd, Singapore</span><span>hello@oxygn.xyz</span></div>
 </footer>
 
 <script>
 const t=document.getElementById('term');
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){t.classList.add('run');o.disconnect()}},{threshold:.4}).observe(t);
+
+const dlg=document.getElementById('talk-dialog'),form=document.getElementById('talk-form'),done=dlg.querySelector('.done'),msg=form.querySelector('.msg'),send=form.querySelector('.send');
+document.querySelectorAll('[data-talk]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();form.hidden=false;done.hidden=true;msg.textContent='';dlg.showModal();form.elements.name.focus()}));
+dlg.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>dlg.close()));
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+form.addEventListener('submit',async e=>{
+  e.preventDefault();msg.className='msg';
+  const bad=[...form.querySelectorAll('[required]')].find(el=>!el.value.trim()||(el.type==='email'&&!el.checkValidity()));
+  if(bad){msg.classList.add('err');msg.textContent=bad.type==='email'&&bad.value.trim()?'Please enter a valid work email.':'Please fill in the fields marked *.';bad.focus();return}
+  send.disabled=true;msg.textContent='Sending…';
+  try{
+    const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});
+    const b=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(b.error||'We couldn’t send that. Please try again.');
+    form.reset();form.hidden=true;done.hidden=false;done.querySelector('button').focus();
+  }catch(err){msg.classList.add('err');msg.textContent=err instanceof TypeError?'Connection problem. Please try again.':err.message}
+  finally{send.disabled=false;if(!msg.classList.contains('err'))msg.textContent=''}
+});
 </script>
 </body>
 </html>

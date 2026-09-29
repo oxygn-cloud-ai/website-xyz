@@ -1,9 +1,9 @@
 {
   "name": "website-xyz",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "private": true,
   "engines": { "node": ">=22.13.0" },
-  "scripts": { "dev": "vinext dev", "build": "vinext build", "start": "vinext start", "test": "node --experimental-strip-types --test tests/contact-validation.test.ts" },
+  "scripts": { "dev": "vinext dev", "build": "vinext build", "start": "vinext start", "test": "node --experimental-strip-types --test tests/contact-validation.test.ts tests/contact-api.test.mjs" },
   "dependencies": { "drizzle-orm": "^0.44.5", "next": "16.2.6", "react": "19.2.6", "react-dom": "19.2.6" },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1", "@cloudflare/workers-types": "4.20260515.1",
