@@ -148,5 +148,33 @@
       "prompt": "loops/releaser.md",
       "stateFile": ".claude/state/releaser.md"
     }
+  },
+  "docs": {
+    "confluence": {
+      "spaceKey": "OCD",
+      "parentPageId": "38076417",
+      "pages": {
+        "technicalDocument": {
+          "pageId": "38076417",
+          "url": "https://oxygn.atlassian.net/wiki/spaces/OCD/pages/38076417"
+        },
+        "securityConfigurationAndAudit": {
+          "pageId": "69042177",
+          "url": "https://oxygn.atlassian.net/wiki/spaces/OCD/pages/69042177"
+        },
+        "operationsRunbook": {
+          "pageId": "68714510",
+          "url": "https://oxygn.atlassian.net/wiki/spaces/OCD/pages/68714510"
+        },
+        "businessRequirements": {
+          "pageId": "37912580",
+          "url": "https://oxygn.atlassian.net/wiki/spaces/OCD/pages/37912580"
+        },
+        "userGuide": {
+          "pageId": "37879814",
+          "url": "https://oxygn.atlassian.net/wiki/spaces/OCD/pages/37879814"
+        }
+      }
+    }
   }
 }
