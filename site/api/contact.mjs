@@ -1,7 +1,8 @@
 // Talk-to-us form: record the lead in Lightfield and email the team from the site.
 // Either destination succeeding counts as delivered; the visitor only sees an
 // error if both fail.
-// ponytail: no rate limiting beyond the honeypot; add Vercel Firewall rules if spam appears.
+// Abuse controls, in order: Vercel Firewall rate limits (dashboard, not this file),
+// same-origin check, honeypot, BotID Deep Analysis, Kickbox.
 
 const LF = 'https://api.lightfield.app/v1';
 const LF_VERSION = '2026-03-01';
@@ -171,6 +172,9 @@ async function botId() {
 // The page ships no UI logic: the enquiry script swaps in the fragment below,
 // and a browser without JavaScript gets a full page.
 const MAX_BODY = 32 * 1024;
+const HTML_HEADERS = {
+  'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', Pragma: 'no-cache', 'X-Content-Type-Options': 'nosniff',
+};
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 function fragment(status, body) {
@@ -228,17 +232,25 @@ export async function handlePost(request, env, fetchImpl, deps) {
   const viaScript = request.headers.get('x-requested-with') === 'fetch';
   if (crossSite(request)) {
     const r = json(403, { error: 'This form only accepts submissions from oxygn.xyz. Please email hello@oxygn.xyz.' });
-    return new Response(viaScript ? fragment(r.status, r.body) : page(r.status, r.body), {
-      status: 403, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
-    });
+    return new Response(viaScript ? fragment(r.status, r.body) : page(r.status, r.body), { status: 403, headers: HTML_HEADERS });
   }
   const { data, tooBig } = await readBody(request);
   const r = tooBig ? json(413, { error: 'That message is too long. Please shorten it.' })
     : data ? await handleContact(data, env, fetchImpl, deps)
     : json(400, { error: 'Invalid request.' });
   const html = viaScript ? fragment(r.status, r.body) : page(r.status, r.body);
-  return new Response(html, {
-    status: r.status,
-    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' },
+  return new Response(html, { status: r.status, headers: HTML_HEADERS });
+}
+
+// Every other method: an explicit 405 that says what is allowed.
+function methodNotAllowed() {
+  return new Response('Method not allowed. This endpoint only accepts POST.\n', {
+    status: 405,
+    headers: { Allow: 'POST', 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', Pragma: 'no-cache', 'X-Content-Type-Options': 'nosniff' },
   });
 }
+export const GET = methodNotAllowed;
+export const PUT = methodNotAllowed;
+export const PATCH = methodNotAllowed;
+export const DELETE = methodNotAllowed;
+export const OPTIONS = methodNotAllowed;

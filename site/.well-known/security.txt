@@ -1,0 +1,4 @@
+Contact: mailto:hello@oxygn.xyz
+Expires: 2027-09-30T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://oxygn.xyz/.well-known/security.txt

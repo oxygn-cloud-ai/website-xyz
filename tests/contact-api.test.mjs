@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { handleContact, handlePost, POST } from '../site/api/contact.mjs';
+import { handleContact, handlePost, POST, GET, PUT, PATCH, DELETE, OPTIONS } from '../site/api/contact.mjs';
 
 const valid = {
   name: 'Ada Tan',
@@ -485,3 +485,25 @@ test('POST: no configuration still renders an HTML error, not a crash', async ()
   assert.equal(r.status, 500);
   assert.match(await r.text(), /hello@oxygn\.xyz/);
 });
+
+// --- chk2 fixes ------------------------------------------------------------------
+test('responses carry Pragma: no-cache for HTTP/1.0 caches', async () => {
+  const r = await handlePost(req(formBody(valid), FETCH), env, fakeFetch(), { checkBot: human });
+  assert.equal(r.headers.get('pragma'), 'no-cache');
+});
+
+test('cross-site refusal also carries the no-cache headers', async () => {
+  const r = await handlePost(req(formBody(valid), { ...FETCH, Origin: 'https://evil.example' }), env, fakeFetch(), spyDeps());
+  assert.equal(r.headers.get('pragma'), 'no-cache');
+  assert.equal(r.headers.get('cache-control'), 'no-store');
+});
+
+for (const [name, fn] of Object.entries({ GET, PUT, PATCH, DELETE, OPTIONS })) {
+  test(`${name} is 405 with Allow: POST and a typed body`, async () => {
+    const r = await fn(new Request('https://oxygn.xyz/api/contact', { method: name }));
+    assert.equal(r.status, 405);
+    assert.equal(r.headers.get('allow'), 'POST');
+    assert.match(r.headers.get('content-type'), /text\/plain/);
+    assert.equal(r.headers.get('x-content-type-options'), 'nosniff');
+  });
+}
