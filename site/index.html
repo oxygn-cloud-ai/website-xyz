@@ -13,6 +13,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="module" src="/assets/botid-client.js"></script>
+<script type="module" src="/assets/site.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Fragment+Mono&display=swap" rel="stylesheet">
@@ -45,7 +46,9 @@
       <div class="w r3 role"><div class="wb mono"><span>Qualified person</span><span>QP</span></div><div class="wi"><b class="glyph">QP</b><span>decides</span><ul class="chips mono"><li>read</li><li>amend</li><li>approve</li></ul></div></div>
       <div class="w r4 role"><div class="wb mono"><span>Ledger</span><span>LG</span></div><div class="wi"><b class="glyph">LG</b><span>records every step</span><ul class="chips mono"><li>what</li><li>which agent</li><li>who approved</li></ul></div></div>
       <div class="board"><picture class="anim q"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/anim/queue-still.svg"><img src="/assets/anim/queue.svg" alt="The risk register board: 167 risks in Pending Review; one is accepted and moves to Risk Accepted" width="368" height="300" loading="lazy"></picture></div>
-      <div class="w r5 tally"><div class="wb mono"><span>Counter</span><span>1.1</span></div><div class="wi"><b class="count" aria-label="168">168</b><span class="mono">risks written · 5 min 26 s</span></div></div>
+      <div class="w r5 tally"><div class="wb mono"><span>Counter</span><span>1.1</span></div><div class="wi"><b class="count" data-count="168" aria-label="168">168</b><span class="mono">risks written · 5 min 26 s</span></div></div>
+      <div class="w r7 time"><div class="wb mono"><span>Clock</span><span>SGT</span></div><div class="wi"><b class="clock">Singapore</b><span class="mono">the workforce works continuously</span></div></div>
+      <div class="w r8 feedw"><div class="wb mono"><span>Ledger feed</span><span>replay</span></div><div class="wi"><ol class="feed mono" aria-hidden="true"><li>RR-8 · High · +0:00</li><li>RR-9 · Medium · +0:57</li><li>RR-10 · High · +0:58</li><li>RR-11 · Medium · +1:00</li><li>RR-12 · Medium · +1:02</li></ol><span class="mono cap">the register as it was written</span></div></div>
       <div class="w r6 ver"><div class="wb mono"><span>Oxygn</span><span>0.5</span></div><div class="wi"><span class="mono">Oxygn Pte Ltd<br>Singapore<br>AI execution. Human authority.</span></div></div>
     </div>
   </section>
@@ -60,7 +63,7 @@
   </section>
 
   <section class="claim" aria-labelledby="k">
-    <div class="crop"><h2 class="display" id="k"><span>168 risks in</span> <span>5 min 26 s.</span></h2></div>
+    <div class="crop"><h2 class="display" id="k"><span><span class="n" data-count="168">168</span> risks in</span> <span>5 min 26 s.</span></h2></div>
     <p class="note mono">*Time from the first to the last risk entering one client’s risk register. A person has moved one to Risk Accepted; 167 wait for review. <a href="#faq">What this is</a></p>
     <div class="split">
       <figure><picture class="anim s1"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/anim/written-still.svg"><img src="/assets/anim/written.svg" alt="168 cells appear at the pace the risks were written, shaded by priority" width="400" height="414" loading="lazy"></picture></figure>

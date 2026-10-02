@@ -163,7 +163,7 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
   @keyframes tally{0%{--n:0}65%,100%{--n:168}}
 }
 @media (min-width:64rem){
-  .os{display:block;height:38rem;padding:0}
+  .os{display:block;height:40rem;padding:0}
   .os > .w{position:absolute;width:16rem;z-index:2}
   .r1{left:4%;top:9%}
   .r2{left:11%;top:31%}
@@ -172,6 +172,8 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
   .os > .board{position:absolute;width:27rem;left:50%;top:8%;margin-left:-13.5rem;z-index:1;box-shadow:.6rem .6rem 0 rgba(30,30,30,.18)}
   .r5{left:5%;bottom:7%;width:14rem}
   .r6{right:3%;bottom:5%;width:13rem}
+  .r7{left:24%;bottom:6%;width:12rem}
+  .r8{left:50%;bottom:4%;width:20rem;margin-left:-10rem}
   .blob{display:block;position:absolute;border-radius:50%;z-index:0;
     background:radial-gradient(var(--ink) 1.3px,transparent 1.6px) 0 0/5px 5px;
     -webkit-mask-image:radial-gradient(closest-side,#000 15%,rgba(0,0,0,.55) 55%,transparent);mask-image:radial-gradient(closest-side,#000 15%,rgba(0,0,0,.55) 55%,transparent)}
@@ -234,3 +236,21 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
 .go a{font:500 clamp(2.2rem,4.6vw,4rem)/1 var(--grot);letter-spacing:-.045em;text-decoration-thickness:.07em;text-underline-offset:.14em}
 
 @media (prefers-reduced-motion:reduce){.w,.dot,.count,.fn,.news .w{animation:none}.count{color:inherit}.count::after{content:none}}
+
+/* ---- with JavaScript (assets/site.js) ---- */
+.anim svg{display:block;width:100%;height:auto}
+.js .count{animation:none;color:inherit}
+.js .count::after{content:none}
+.js .term li{animation:none}
+.js .term li.wait{visibility:hidden}
+.claim .n{font-variant-numeric:tabular-nums}
+.clock{display:block;font:500 2.2rem/1 var(--grot);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.time .wi,.feedw .wi{display:grid;gap:.35rem}
+.feed{list-style:none;min-height:7.5rem;font-size:.75rem;line-height:1.25rem}
+.feed li:last-child{background:var(--ink);color:var(--paper);padding:0 .3rem;margin-left:-.3rem}
+.feedw .cap{font-size:.7rem;color:#555}
+.grab{cursor:grab;touch-action:none;user-select:none}
+.lifted .grab,.lifted.grab{cursor:grabbing}
+.os > .lifted{box-shadow:inset 0 0 0 3px var(--mist),inset 0 0 0 4px var(--ink),.5rem .5rem 0 rgba(30,30,30,.25)}
+.replay{display:block;margin:1.4rem auto 0;background:var(--ink);color:var(--paper);border:0;padding:.55rem 1.2rem;cursor:pointer}
+.replay:hover{background:#000}

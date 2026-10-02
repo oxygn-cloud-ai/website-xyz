@@ -356,6 +356,9 @@ def still(s):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    # the same data for site.js (live feed, replay); one source of truth
+    import json
+    (OUT.parent / "register.json").write_text(json.dumps({"first": 8, "prio": PRIO, "secs": SECS}, separators=(",", ":")) + "\n")
     for name, build in [("queue", queue), ("assess", assess), ("register", register), ("written", written),
                         ("decided", decided), ("priority", priority_chart), ("rate", rate)]:
         s = build()
