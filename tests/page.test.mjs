@@ -39,9 +39,13 @@ test('every in-page link has a target', () => {
 });
 
 test('quotes the real register figures', () => {
-  for (const want of ['168', '5 min 26 s', '167', 'Risk Accepted']) {
+  for (const want of ['275', '24/7/365', '167', 'Risk Accepted']) {
     assert.ok(visible.includes(want), `page lacks "${want}"`);
   }
+});
+
+test('no speed or timing claims: the message is continuous assessment', () => {
+  assert.doesNotMatch(visible, /5 min 26|per minute|1\.6 s|one every|in \d+ min/i);
 });
 
 test('has the sections the page promises', () => {

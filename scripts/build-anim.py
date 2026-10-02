@@ -5,8 +5,8 @@ Stylised redraws of Oxygn's real Risk Register (Jira) for a client: the board,
 one risk (RR-20) and the list. Keys, statuses, priorities, field names, field
 values and counts are the real ones; summaries are grey bars, and no client,
 person or date appears. Workflow: Pending Review -> Risk Accepted / Risk Live /
-Risk Closed / Risk Cancelled. At capture: 168 risks, 167 Pending Review, RR-20
-Risk Accepted with five sub-tasks.
+Risk Closed / Risk Cancelled. At capture: 275 artefacts across eight registers; 168 risks, 167 Pending
+Review, RR-20 Risk Accepted with five sub-tasks.
 
 Animation is SMIL only: the site-wide CSP blocks inline <style>, and SMIL needs
 none. Each file has a -still twin (animations stripped, so base attributes
@@ -218,24 +218,20 @@ def register():
     return svg(W, H, "\n".join(p))
 
 
-# --- The register as written: every risk in creation order, with its real
-# priority, and the seconds after the first risk at which it was written.
+# --- The risk register: every risk in the order written, with its real priority.
 PRIO = ("HMHMMMMHMMMMMMMMMMMMHMHMMMMMMHMMMHHXMHMMHHHHHMXMMMHMMMXMMMMMMMMMMMLMMMMMMMMHMMHMMHMMHHMMMM"
         "HMHMHHMMMMMMMMMXMHHHMMXMMHMMMHMMMHHMMMMMMMHHMMMHMMHMHHMMMMHMHMMHMMMMMMMMMMMMMM")
-SECS = [0, 57, 58, 60, 62, 63, 65, 66, 68, 69, 71, 73, 74, 75, 77, 79, 80, 82, 83, 85, 86, 88, 89, 91, 93, 94, 96,
-        98, 99, 101, 102, 104, 106, 107, 109, 110, 112, 114, 115, 117, 118, 120, 121, 123, 125, 126, 128, 130, 131,
-        133, 134, 136, 138, 139, 141, 142, 144, 145, 147, 148, 150, 151, 153, 154, 156, 157, 159, 160, 162, 163, 165,
-        166, 168, 169, 174, 175, 177, 178, 180, 181, 183, 184, 186, 188, 189, 191, 192, 194, 195, 197, 198, 200, 202,
-        203, 205, 206, 208, 210, 211, 213, 214, 216, 218, 219, 221, 222, 224, 226, 227, 229, 230, 232, 233, 235, 237,
-        238, 240, 241, 243, 245, 246, 248, 249, 251, 252, 254, 255, 257, 258, 260, 262, 263, 265, 266, 268, 270, 271,
-        272, 274, 275, 277, 278, 280, 281, 283, 284, 286, 288, 296, 298, 299, 301, 302, 304, 305, 307, 308, 310, 311,
-        313, 314, 316, 318, 319, 321, 322, 324, 326]
-PER_MINUTE = [1, 20, 37, 38, 38, 34]   # risks written in each clock minute
-RR20 = 12                              # RR-20's place in the order written
+RR20 = 12                              # RR-20's place in that order
 NAMES = {"X": "Highest", "H": "High", "M": "Medium", "L": "Low"}
 SHADE = {"X": INK, "H": "#4A4A4A", "M": "#9A9A9A", "L": "#D0D0D0"}
-assert len(PRIO) == len(SECS) == sum(PER_MINUTE) == 168 and SECS[-1] == 326
+assert len(PRIO) == 168
 assert {k: PRIO.count(k) for k in "XHML"} == {"X": 5, "H": 40, "M": 122, "L": 1}
+
+# --- All eight of the client's registers and the artefacts each holds.
+REGISTERS = [("Risk Register", 173), ("System Improver", 60), ("Data Library", 32), ("Processing", 5),
+             ("Requests", 2), ("Board Resolutions", 2), ("Work Tracker", 1), ("Obligations", 0)]
+TOTAL = sum(n for _, n in REGISTERS)
+assert TOTAL == 275
 
 COLS, CELL, GAP, GX, GY = 14, 20, 4, 32, 58
 
@@ -253,23 +249,35 @@ def legend(y, items):
     return "".join(out)
 
 
-# --- written: AI execution. 168 cells appear at the real pace they were written.
-def written():
-    W, H, D = 400, 414, 12.0
-    p = [chrome(W, H, "AI execution", "risk register")]
-    for i, (k, t) in enumerate(zip(PRIO, SECS)):
-        x, y = cell_xy(i)
-        at = .04 + .66 * t / 326
-        p.append(f'<rect x="{x}" y="{y}" width="{CELL}" height="{CELL}" fill="{SHADE[k]}">'
-                 + fade("0;0;1;1;0", f"0;{at:.3f};{at+.01:.3f};.93;1", f"{D}s") + "</rect>")
-    gb = GY + 12 * (CELL + GAP) + 6
-    # the clock: a bar that runs for the 5 min 26 s, scaled
-    p.append(f'<rect x="32" y="{gb}" width="336" height="4" fill="#C9C9C9"/>'
-             f'<rect x="32" y="{gb}" width="336" height="4" fill="{INK}">'
-             f'<animate attributeName="width" values="0;0;336;336;0" keyTimes="0;.04;.7;.93;1" dur="{D}s" repeatCount="indefinite"/></rect>')
-    p.append(text(32, gb + 24, "168", 18, INK, extra=f' font-family="{SANS}" font-weight="500"')
-             + text(70, gb + 24, "risks written", 11) + text(W - 32, gb + 24, "5 min 26 s", 11, INK, "end"))
-    p.append(legend(gb + 44, [(NAMES[k], SHADE[k], SHADE[k]) for k in "XHML"]))
+# --- scan: all 275 artefacts, by register, swept by an assessment beam that
+# never stops. 25 x 11 cells.
+def scan():
+    W, H, D = 420, 296, 6.0
+    cols, cell, gap, gx, gy = 25, 12, 3, 23, 50
+    groups = [("Risk Register", 173, INK), ("System Improver", 60, "#4A4A4A"),
+              ("Data Library", 32, "#9A9A9A"), ("Other registers", 10, AIR)]
+    shades = [c for _, n, c in groups for _ in range(n)]
+    assert len(shades) == TOTAL
+    p = [chrome(W, H, "assessment", "24/7/365")]
+    p.append(text(gx, 44, "275 artefacts · 8 registers", 10, DIM))
+    rows = TOTAL // cols
+    for i, c in enumerate(shades):
+        x, y = gx + (i % cols) * (cell + gap), gy + (i // cols) * (cell + gap)
+        r = i // cols
+        # each cell flares as the beam passes its row
+        at = r / rows
+        p.append(f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" fill="{c}">'
+                 f'<animate attributeName="opacity" values="1;1;.35;1;1" keyTimes="0;{max(at-.001,0):.3f};{at+.04:.3f};{min(at+.12,.999):.3f};1" '
+                 f'dur="{D}s" repeatCount="indefinite"/></rect>')
+    bh = rows * (cell + gap)
+    p.append(f'<rect x="{gx-4}" y="{gy-2}" width="{cols*(cell+gap)+5}" height="6" fill="{AIR}" opacity=".9">'
+             f'<animate attributeName="y" values="{gy-2};{gy+bh-4}" dur="{D}s" repeatCount="indefinite"/></rect>')
+    ly = gy + bh + 22
+    p.append(text(gx, ly, "275", 18, INK, extra=f' font-family="{SANS}" font-weight="500"')
+             + text(gx + 42, ly, "artefacts assessed", 11) + text(W - 23, ly, "24/7/365", 11, INK, "end"))
+    for k, (name, n, c) in enumerate(groups):
+        x, y = gx + (k % 2) * 190, ly + 20 + (k // 2) * 16
+        p.append(f'<rect x="{x+.5}" y="{y-8.5}" width="10" height="10" fill="{c}" stroke="{c}"/>' + text(x + 15, y + 1, f"{name} {n}", 10))
     return svg(W, H, "\n".join(p))
 
 
@@ -327,26 +335,23 @@ def priority_chart():
     return svg(W, H, "\n".join(p))
 
 
-# --- rate: risks written in each clock minute.
-def rate():
-    W, H, D = 420, 236, "8s"
-    p = [chrome(W, H, "risks written per minute", "peak 38")]
+# --- registers: artefacts held in each of the eight registers.
+def registers_chart():
+    W, H, D = 420, 300, "8s"
+    p = [chrome(W, H, "artefacts by register", "275")]
     p.append(f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>')
-    base, top, bw = 186, 64, 40
-    for t in range(0, 41, 10):
-        y = base - (base - top) * t / 38
-        if t <= 38:
-            p.append(f'<line x1="40" y1="{y:.0f}" x2="{W-24}" y2="{y:.0f}" stroke="#E4E4E4"/>' + text(34, y + 3, str(t), 8, DIM, "end"))
-    for i, n in enumerate(PER_MINUTE):
-        h = (base - top) * n / 38
-        x = 56 + i * 58
-        p.append(f'<rect x="{x}" y="{base-h:.0f}" width="{bw}" height="{h:.0f}" fill="{INK}">'
-                 f'<animate attributeName="height" values="0;0;{h:.0f};{h:.0f};0" keyTimes="0;{.05+i*.08:.2f};{.2+i*.08:.2f};.93;1" dur="{D}" repeatCount="indefinite"/>'
-                 f'<animate attributeName="y" values="{base};{base};{base-h:.0f};{base-h:.0f};{base}" keyTimes="0;{.05+i*.08:.2f};{.2+i*.08:.2f};.93;1" dur="{D}" repeatCount="indefinite"/></rect>')
-        p.append(f'<g>{fade("0;0;1;1;0", f"0;{.2+i*.08:.2f};{.23+i*.08:.2f};.93;1", D)}'
-                 + text(x + bw / 2, base - h - 6, str(n), 11, INK, "middle") + "</g>")
-        p.append(text(x + bw / 2, base + 14, f"min {i+1}", 9, DIM, "middle"))
-    p.append(text(26, H - 20, "after the first, one every 1.6 s", 9, DIM))
+    track, top = 190, 58
+    for i, (name, n) in enumerate(REGISTERS):
+        y = top + i * 27
+        w = max(1, round(track * n / 173)) if n else 0
+        p.append(text(26, y + 4, name, 10))
+        p.append(f'<rect x="150" y="{y-6}" width="{track}" height="12" fill="#E4E4E4"/>')
+        if w:
+            p.append(f'<rect x="150" y="{y-6}" width="{w}" height="12" fill="{INK}">'
+                     f'<animate attributeName="width" values="0;0;{w};{w};0" keyTimes="0;{.04+i*.04:.2f};{.25+i*.04:.2f};.93;1" '
+                     f'dur="{D}" repeatCount="indefinite"/></rect>')
+        p.append(text(W - 26, y + 4, str(n), 12, INK, "end", extra=f' font-family="{SANS}" font-weight="500"'))
+    p.append(text(26, H - 20, "every register under continuous assessment", 9, DIM))
     return svg(W, H, "\n".join(p))
 
 
@@ -358,9 +363,9 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     # the same data for site.js (live feed, replay); one source of truth
     import json
-    (OUT.parent / "register.json").write_text(json.dumps({"first": 8, "prio": PRIO, "secs": SECS}, separators=(",", ":")) + "\n")
-    for name, build in [("queue", queue), ("assess", assess), ("register", register), ("written", written),
-                        ("decided", decided), ("priority", priority_chart), ("rate", rate)]:
+    (OUT.parent / "register.json").write_text(json.dumps({"first": 8, "prio": PRIO}, separators=(",", ":")) + "\n")
+    for name, build in [("queue", queue), ("assess", assess), ("register", register), ("scan", scan),
+                        ("decided", decided), ("priority", priority_chart), ("registers", registers_chart)]:
         s = build()
         (OUT / f"{name}.svg").write_text(s)
         (OUT / f"{name}-still.svg").write_text(still(s))
