@@ -51,6 +51,27 @@ for (const n of names) {
   });
 }
 
+// The drawings must show what the real risk register shows (Jira project
+// "Risk Register": workflow Pending Review -> Risk Accepted / Live / Closed /
+// Cancelled; 168 risks, 167 pending, RR-20 accepted). Summaries stay as bars.
+const real = {
+  queue: ['Pending Review', '167', 'Risk Accepted', '>1<', 'RR-8', 'RR-9', 'RR-10', 'RR-20', 'Subtasks', '0/5'],
+  assess: ['RR-20', 'Risk Accepted', 'Function Impacted', 'Review Interval', 'Annually', 'Review Cadence', 'Periodic',
+    'Risk Probability', '4 - Likely', 'Risk Impact', '3 - Moderate', 'Risk Score', '>12<', 'Subtasks', '0% Done',
+    'RR-176', 'RR-177', 'RR-178', 'RR-179', 'RR-180', 'Open', 'Pending Review'],
+  register: ['Work', 'Priority', 'Status', 'Resolution', 'RR-12', 'RR-15', 'RR-19', 'RR-20', 'High', 'Medium',
+    'Pending Review', 'Risk Accepted', 'Unresolved', '50 of 168'],
+};
+for (const n of names) {
+  test(`${n} shows the real register's content, not invented content`, () => {
+    for (const f of [`${n}.svg`, `${n}-still.svg`]) {
+      const s = read(f);
+      for (const want of real[n]) assert.ok(s.includes(want), `${f} lacks "${want}"`);
+      assert.doesNotMatch(s, /signed off|>ai<|\bR-\d/i, `${f} has invented statuses or keys`);
+    }
+  });
+}
+
 test('the old drawn visuals are gone and nothing else was removed', () => {
   assert.doesNotMatch(html, /class="ledger"/);
   assert.doesNotMatch(html, /Regulatory change detected/);

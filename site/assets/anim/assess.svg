@@ -1,25 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300" font-family="Menlo, ui-monospace, monospace">
-<rect x=".5" y=".5" width="299" height="299" fill="#DEDEDE" stroke="#1E1E1E"/>
-<rect x="3.5" y="3.5" width="293" height="293" fill="none" stroke="#1E1E1E"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="428" viewBox="0 0 300 428" font-family="Menlo, ui-monospace, monospace">
+<rect x=".5" y=".5" width="299" height="427" fill="#DEDEDE" stroke="#1E1E1E"/>
+<rect x="3.5" y="3.5" width="293" height="421" fill="none" stroke="#1E1E1E"/>
 <rect x="4" y="4" width="292" height="22" fill="#1E1E1E"/>
-<text x="12" y="19" font-size="12" fill="#FEFEFE" text-anchor="start">risk assessment</text>
-<text x="288" y="19" font-size="12" fill="#FEFEFE" text-anchor="end">R-12</text>
-<rect x="12" y="34" width="276" height="254" fill="#FEFEFE" stroke="#1E1E1E"/>
-<rect x="24" y="48" width="236" height="6" fill="#C9C9C9"><animate attributeName="width" values="0;0;236;236;0" keyTimes="0;0.02;0.06;.95;1" dur="9s" repeatCount="indefinite"/></rect>
-<rect x="24" y="59" width="250" height="6" fill="#C9C9C9"><animate attributeName="width" values="0;0;250;250;0" keyTimes="0;0.06;0.10;.95;1" dur="9s" repeatCount="indefinite"/></rect>
-<rect x="24" y="70" width="198" height="6" fill="#C9C9C9"><animate attributeName="width" values="0;0;198;198;0" keyTimes="0;0.10;0.14;.95;1" dur="9s" repeatCount="indefinite"/></rect>
-<rect x="24" y="81" width="120" height="6" fill="#C9C9C9"><animate attributeName="width" values="0;0;120;120;0" keyTimes="0;0.14;0.18;.95;1" dur="9s" repeatCount="indefinite"/></rect>
-<line x1="24" y1="92" x2="276" y2="92" stroke="#1E1E1E" stroke-dasharray="2 3"/>
-<text x="24" y="112" font-size="11" fill="#1E1E1E" text-anchor="start">probability</text>
-<text x="24" y="144" font-size="11" fill="#1E1E1E" text-anchor="start">impact</text>
-<text x="24" y="176" font-size="11" fill="#1E1E1E" text-anchor="start">score</text>
-<g opacity="1"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.22;.25;.95;1" dur="9s" begin="0s" repeatCount="indefinite"/><rect x="150.5" y="98.5" width="96" height="19" fill="none" stroke="#1E1E1E"/><text x="198" y="112" font-size="11" fill="#1E1E1E" text-anchor="middle">4 · likely</text></g>
-<g opacity="1"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.3;.33;.95;1" dur="9s" begin="0s" repeatCount="indefinite"/><rect x="150.5" y="130.5" width="112" height="19" fill="none" stroke="#1E1E1E"/><text x="206" y="144" font-size="11" fill="#1E1E1E" text-anchor="middle">3 · moderate</text></g>
-<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.38;.41;.46;.49;1" dur="9s" begin="0s" repeatCount="indefinite"/><text x="152" y="178" font-size="14" fill="#555" text-anchor="start">4 × 3</text></g>
-<g opacity="1"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.47;.5;.95;1" dur="9s" begin="0s" repeatCount="indefinite"/><text x="152" y="182" font-size="24" fill="#1E1E1E" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-weight="500">12</text></g>
-<line x1="24" y1="204" x2="276" y2="204" stroke="#1E1E1E"/>
-<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.52;.55;.7;.73;1" dur="9s" begin="0s" repeatCount="indefinite"/><rect x="24" y="218" width="252" height="26" fill="#DEDEDE" stroke="#1E1E1E"/><text x="150.0" y="235" font-size="11" fill="#1E1E1E" text-anchor="middle">awaiting qualified sign-off</text></g>
-<g opacity="1"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.7;.73;.95;1" dur="9s" begin="0s" repeatCount="indefinite"/><rect x="24" y="218" width="252" height="26" fill="#8DB3FF" stroke="#1E1E1E"/><text x="150.0" y="235" font-size="11" fill="#1E1E1E" text-anchor="middle">signed off · qualified person</text></g>
-<path d="M40 270 c 10 -14 18 -14 20 0 s 12 12 22 -4 s 14 -10 18 2 s 16 6 26 -6 l 40 0" fill="none" stroke="#1E1E1E" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="0"><animate attributeName="stroke-dashoffset" values="220;220;0;0;220" keyTimes="0;.73;.86;.95;1" dur="9s" repeatCount="indefinite"/></path>
-<text x="276" y="274" font-size="10" fill="#555" text-anchor="end">reviewer</text>
+<text x="12" y="19" font-size="12" fill="#FEFEFE" text-anchor="start">RR-20</text>
+<text x="288" y="19" font-size="12" fill="#FEFEFE" text-anchor="end">risk</text>
+<rect x="12" y="34" width="276" height="382" fill="#FEFEFE" stroke="#1E1E1E"/>
+<rect x="22" y="46" width="236" height="6" fill="#C9C9C9"/><rect x="22" y="56" width="204" height="6" fill="#C9C9C9"/>
+<g opacity="0"><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;.74;.77;.92;1" dur="10s" repeatCount="indefinite"/><rect x="22.5" y="66.5" width="112" height="17" fill="#FEFEFE" stroke="#666666"/><text x="78.5" y="78.5" font-size="10" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.74;.77;.92;1" dur="10s" repeatCount="indefinite"/><rect x="22.5" y="66.5" width="112" height="17" fill="#8DB3FF" stroke="#1E1E1E"/><text x="78.5" y="78.5" font-size="10" fill="#1E1E1E" text-anchor="middle">Risk Accepted</text></g>
+<text x="22" y="110" font-size="10" fill="#666666" text-anchor="start">Function Impacted</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.06;0.09;.92;1" dur="10s" repeatCount="indefinite"/><rect x="160.5" y="98.5" width="96" height="16" fill="#FEFEFE" stroke="#9A9A9A"/><rect x="168" y="104" width="80" height="5" fill="#C9C9C9"/></g>
+<text x="22" y="134" font-size="10" fill="#666666" text-anchor="start">Review Interval</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.12;0.15;.92;1" dur="10s" repeatCount="indefinite"/><rect x="160.5" y="122.5" width="58" height="16" fill="#FEFEFE" stroke="#1E1E1E"/><text x="165" y="134" font-size="10" fill="#1E1E1E" text-anchor="start">Annually</text></g>
+<text x="22" y="158" font-size="10" fill="#666666" text-anchor="start">Review Cadence</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.18;0.21;.92;1" dur="10s" repeatCount="indefinite"/><rect x="160.5" y="146.5" width="58" height="16" fill="#FEFEFE" stroke="#1E1E1E"/><text x="165" y="158" font-size="10" fill="#1E1E1E" text-anchor="start">Periodic</text></g>
+<text x="22" y="182" font-size="10" fill="#666666" text-anchor="start">Risk Probability</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.24;0.27;.92;1" dur="10s" repeatCount="indefinite"/><rect x="160.5" y="170.5" width="70" height="16" fill="#FEFEFE" stroke="#1E1E1E"/><text x="165" y="182" font-size="10" fill="#1E1E1E" text-anchor="start">4 - Likely</text></g>
+<text x="22" y="206" font-size="10" fill="#666666" text-anchor="start">Risk Impact</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.30;0.33;.92;1" dur="10s" repeatCount="indefinite"/><rect x="160.5" y="194.5" width="82" height="16" fill="#FEFEFE" stroke="#1E1E1E"/><text x="165" y="206" font-size="10" fill="#1E1E1E" text-anchor="start">3 - Moderate</text></g>
+<text x="22" y="230" font-size="10" fill="#666666" text-anchor="start">Risk Score</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.39;.92;1" dur="10s" repeatCount="indefinite"/><text x="161" y="231" font-size="13" fill="#1E1E1E" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-weight="500">12</text></g>
+<text x="22" y="254" font-size="10" fill="#666666" text-anchor="start">Reviewed Date</text>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.42;0.45;.92;1" dur="10s" repeatCount="indefinite"/><text x="161" y="254" font-size="10" fill="#9A9A9A" text-anchor="start">Add date</text></g>
+<text x="22" y="290" font-size="11" fill="#1E1E1E" text-anchor="start">Subtasks</text><text x="278" y="290" font-size="9" fill="#666666" text-anchor="end">0% Done</text>
+<rect x="22" y="297" width="256" height="4" fill="#9A9A9A"/><rect x="22" y="297" width="52" height="4" fill="#2F6FEB"/>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.50;0.53;.92;1" dur="10s" repeatCount="indefinite"/><text x="22" y="324" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-176</text><rect x="70" y="317" width="64" height="6" fill="#C9C9C9"/><path d="M170 318 h8 M170 322 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="312.5" width="40" height="17" fill="#FEFEFE" stroke="#666666"/><text x="206.5" y="324.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Open</text></g>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.55;0.58;.92;1" dur="10s" repeatCount="indefinite"/><text x="22" y="345" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-177</text><rect x="70" y="338" width="84" height="6" fill="#C9C9C9"/><path d="M170 339 h8 M170 343 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="333.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="345.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.60;0.63;.92;1" dur="10s" repeatCount="indefinite"/><text x="22" y="366" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-178</text><rect x="70" y="359" width="80" height="6" fill="#C9C9C9"/><path d="M170 360 h8 M170 364 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="354.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="366.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.65;0.68;.92;1" dur="10s" repeatCount="indefinite"/><text x="22" y="387" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-179</text><rect x="70" y="380" width="86" height="6" fill="#C9C9C9"/><path d="M170 381 h8 M170 385 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="375.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="387.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
+<g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.70;0.73;.92;1" dur="10s" repeatCount="indefinite"/><text x="22" y="408" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-180</text><rect x="70" y="401" width="70" height="6" fill="#C9C9C9"/><path d="M170 402 h8 M170 406 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="396.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="408.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
 </svg>

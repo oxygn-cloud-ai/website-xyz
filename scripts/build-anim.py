@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Build the site's animated illustrations into site/assets/anim/.
 
-Stylised redraws of Oxygn's real work queues (a risk register): AI drafts the
-work, it waits for review, a qualified person signs it off. No screenshot
-pixels and no client text: every line of "text" is a grey bar.
+Stylised redraws of Oxygn's real Risk Register (Jira) for a client: the board,
+one risk (RR-20) and the list. Keys, statuses, priorities, field names, field
+values and counts are the real ones; summaries are grey bars, and no client,
+person or date appears. Workflow: Pending Review -> Risk Accepted / Risk Live /
+Risk Closed / Risk Cancelled. At capture: 168 risks, 167 Pending Review, RR-20
+Risk Accepted with five sub-tasks.
 
 Animation is SMIL only: the site-wide CSP blocks inline <style>, and SMIL needs
 none. Each file has a -still twin (animations stripped, so base attributes
-are the resting frame) that index.html serves to prefers-reduced-motion.
+are the resting frame, matching the real data) that index.html serves to
+prefers-reduced-motion.
 
 Run: python3 scripts/build-anim.py
 """
@@ -15,10 +19,11 @@ import re
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent.parent / "site" / "assets" / "anim"
-INK, PAPER, AIR, SAGE, MIST = "#1E1E1E", "#FEFEFE", "#8DB3FF", "#ABBAB9", "#DEDEDE"
+INK, PAPER, AIR, MIST = "#1E1E1E", "#FEFEFE", "#8DB3FF", "#DEDEDE"
+BAR, DIM = "#C9C9C9", "#666666"
+HIGH, MEDIUM = "#E5493A", "#F79232"  # Jira's priority colours
 MONO = "Menlo, ui-monospace, monospace"
 SANS = "Helvetica, Arial, sans-serif"
-EASE = "0.4 0 0.2 1"
 
 
 def svg(w, h, body):
@@ -26,159 +31,198 @@ def svg(w, h, body):
             f'font-family="{MONO}">\n{body}\n</svg>\n')
 
 
-def text(x, y, s, size=11, fill=INK, anchor="start", family=None, extra=""):
-    fam = f' font-family="{family}"' if family else ""
-    return f'<text x="{x}" y="{y}" font-size="{size}" fill="{fill}" text-anchor="{anchor}"{fam}{extra}>{s}</text>'
+def text(x, y, s, size=11, fill=INK, anchor="start", extra=""):
+    return f'<text x="{x}" y="{y}" font-size="{size}" fill="{fill}" text-anchor="{anchor}"{extra}>{s}</text>'
 
 
-def fade(values, times, dur, begin="0s"):
-    """Opacity keyframes; base opacity attribute is the still frame."""
-    return (f'<animate attributeName="opacity" values="{values}" keyTimes="{times}" dur="{dur}" '
-            f'begin="{begin}" repeatCount="indefinite"/>')
+def anim(attr, values, times, dur):
+    return (f'<animate attributeName="{attr}" values="{values}" keyTimes="{times}" dur="{dur}" '
+            f'repeatCount="indefinite"/>')
 
 
-def chrome(w, h, title, right=""):
-    """The site's window: mist panel, double ink rule, ink title bar."""
+def fade(values, times, dur):
+    """Opacity keyframes; the element's base opacity is the still frame."""
+    return anim("opacity", values, times, dur)
+
+
+def show(at, dur, end=".92"):
+    """Hidden until `at`, then visible until the loop fades out."""
+    return fade("0;0;1;1;0", f"0;{at};{float(at)+.03:.2f};{end};1", dur)
+
+
+def chrome(w, h, title, right="", bar=INK, fg=PAPER, panel=MIST, rule=INK):
+    """The site's window: panel, double rule, title bar."""
     return "\n".join([
-        f'<rect x=".5" y=".5" width="{w-1}" height="{h-1}" fill="{MIST}" stroke="{INK}"/>',
-        f'<rect x="3.5" y="3.5" width="{w-7}" height="{h-7}" fill="none" stroke="{INK}"/>',
-        f'<rect x="4" y="4" width="{w-8}" height="22" fill="{INK}"/>',
-        text(12, 19, title, 12, PAPER),
-        text(w - 12, 19, right, 12, PAPER, "end") if right else "",
+        f'<rect x=".5" y=".5" width="{w-1}" height="{h-1}" fill="{panel}" stroke="{rule}"/>',
+        f'<rect x="3.5" y="3.5" width="{w-7}" height="{h-7}" fill="none" stroke="{rule}"/>',
+        f'<rect x="4" y="4" width="{w-8}" height="22" fill="{bar}"/>',
+        text(12, 19, title, 12, fg),
+        text(w - 12, 19, right, 12, fg, "end") if right else "",
     ])
 
 
-def bars(x, y, widths, fill, gap=10, h=6):
+def bars(x, y, widths, fill=BAR, gap=10, h=6):
     return "".join(f'<rect x="{x}" y="{y + i*gap}" width="{w}" height="{h}" fill="{fill}"/>'
                    for i, w in enumerate(widths))
 
 
-# --- 1. queue: the hero. Work drafted by AI joins the review queue; the oldest
-# item gets signed off and leaves. Five cards cycle through four slots.
+def priority(x, y, level, label=True, fill=INK, size=11):
+    """Jira's priority glyph: red chevrons for High, orange bars for Medium."""
+    if level == "High":
+        g = (f'<path d="M{x} {y-2} l4 -4 l4 4 M{x} {y+2} l4 -4 l4 4" fill="none" '
+             f'stroke="{HIGH}" stroke-width="1.6"/>')
+    else:
+        g = (f'<path d="M{x} {y-4} h8 M{x} {y} h8" fill="none" stroke="{MEDIUM}" stroke-width="1.8"/>')
+    return g + (text(x + 14, y + 3, level, size, fill) if label else "")
+
+
+def unassigned(cx, cy, r=8, fill="#D0D0D0", stroke="#666"):
+    return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{fill}"/>'
+            f'<circle cx="{cx}" cy="{cy-2.5}" r="{r*.3:.1f}" fill="none" stroke="{stroke}"/>'
+            f'<path d="M{cx-r*.5:.1f} {cy+r*.6:.1f} a{r*.5:.1f} {r*.45:.1f} 0 0 1 {r:.1f} 0" fill="none" stroke="{stroke}"/>')
+
+
+def chip(x, y, label, w, filled=False, size=10):
+    """A Jira status lozenge; Risk Accepted is filled in the site's air blue."""
+    fill = AIR if filled else PAPER
+    return (f'<rect x="{x+.5}" y="{y+.5}" width="{w}" height="17" fill="{fill}" stroke="{INK if filled else DIM}"/>'
+            + text(x + w/2 + .5, y + 12.5, label, size, INK, "middle"))
+
+
+# --- 1. queue (hero): the Risk Register board. The AI workforce has drafted
+# 168 risks; 167 wait in Pending Review. A person accepts one: it moves to
+# Risk Accepted and the counts change.
 def queue():
-    W, H, P, TOP = 368, 300, 58, 58
-    D = 12.0  # seconds per card cycle; a new card every D/5
-    cards = [
-        ("R-08", [212, 168], AIR), ("R-09", [236, 120], SAGE), ("R-10", [190, 204], AIR),
-        ("R-11", [224, 150], SAGE), ("R-12", [200, 180], AIR),
-    ]
-    pos = ";".join(f"0,{v}" for v in [-P, 0, 0, P, P, 2*P, 2*P, 3*P, 3*P, 4*P, 4*P])
-    kt = "0;.06;.2;.26;.4;.46;.6;.66;.8;.86;1"
-    parts = [chrome(W, H, "oxygn workforce", ""),
-             f'<circle cx="{W-50}" cy="15" r="3.5" fill="{AIR}">'
-             f'<animate attributeName="opacity" values="1;.25;1" dur="1.6s" repeatCount="indefinite"/></circle>',
-             text(W - 12, 19, "live", 12, PAPER, "end"),
-             text(16, 46, "pending review", 11),
-             text(W - 16, 46, "drafted by ai · signed off by people", 9, "#555", "end"),
-             f'<clipPath id="q"><rect x="12" y="{TOP-2}" width="{W-24}" height="{H-TOP-10}"/></clipPath>',
-             '<g clip-path="url(#q)">']
-    for k, (key, ws, dot) in enumerate(cards):
-        begin = f"{-(0.1 + 0.2*k) * D:.2f}s"
-        still_y = k * P if k < 4 else 4 * P
-        still_op = 1 if k < 4 else 0
-        stamp_op = 1 if k == 3 else 0
-        x, y = 12, TOP
-        parts.append(
-            f'<g transform="translate(0,{still_y})" opacity="{still_op}">'
-            f'<animateTransform attributeName="transform" type="translate" values="{pos}" keyTimes="{kt}" '
-            f'calcMode="spline" keySplines="{";".join([EASE]*10)}" dur="{D}s" begin="{begin}" repeatCount="indefinite"/>'
-            + fade("0;1;1;0;0", "0;.06;.8;.86;1", f"{D}s", begin)
-            + f'<rect x="{x+.5}" y="{y+.5}" width="{W-25}" height="50" fill="{PAPER}" stroke="{INK}"/>'
-            + bars(x + 12, y + 10, ws, "#C9C9C9")
-            + text(x + 12, y + 42, key, 10)
-            + f'<rect x="{x+268}" y="{y+34}" width="8" height="8" fill="{dot}"/>'
-            + f'<circle cx="{x+322}" cy="{y+24}" r="9" fill="none" stroke="{INK}"/>'
-            + text(x + 322, y + 27, "ai", 8, INK, "middle")
-            # the sign-off stamp, applied while the card sits in the last slot
-            + f'<g opacity="{stamp_op}" transform="rotate(-5 {x+214} {y+22})">'
-            + fade("0;0;1;1;0", "0;.68;.71;.86;1", f"{D}s", begin)
-            + f'<rect x="{x+168}" y="{y+12}" width="92" height="20" fill="{AIR}" stroke="{INK}"/>'
-            + text(x + 214, y + 26, "signed off", 10, INK, "middle")
-            + "</g></g>")
-    parts.append("</g>")
-    return svg(W, H, "\n".join(parts))
+    W, H, D = 368, 300, "9s"
+    CW, LX, RX, TOP = 166, 12, 190, 34
+    p = [chrome(W, H, "risk register", "board")]
+    for x, name in [(LX, "Pending Review"), (RX, "Risk Accepted")]:
+        p.append(f'<rect x="{x}" y="{TOP}" width="{CW}" height="{H-TOP-10}" fill="#E9E9E9"/>')
+        p.append(text(x + 8, TOP + 15, name, 10))
+    # column counts: 167 / 1 at rest; 166 / 2 once the risk is accepted
+    p.append(f'<g>{fade("1;1;0;0;1", "0;.42;.44;.92;1", D)}{text(LX + 112, TOP + 15, "167", 10, DIM)}</g>')
+    p.append(f'<g opacity="0">{show(".42", D)}{text(LX + 112, TOP + 15, "166", 10, DIM)}</g>')
+    p.append(f'<g>{fade("1;1;0;0;1", "0;.42;.44;.92;1", D)}{text(RX + 106, TOP + 15, "1", 10, DIM)}</g>')
+    p.append(f'<g opacity="0">{show(".42", D)}{text(RX + 106, TOP + 15, "2", 10, DIM)}</g>')
 
+    def card(x, y, key, level, widths, sub=False):
+        h = 74 if sub else 56
+        s = (f'<rect x="{x+4.5}" y="{y+.5}" width="{CW-9}" height="{h}" fill="{PAPER}" stroke="#9A9A9A"/>'
+             + bars(x + 14, y + 10, widths)
+             + text(x + 14, y + 47, key, 10) + priority(x + 112, y + 44, level, label=False)
+             + unassigned(x + CW - 22, y + 43))
+        if sub:
+            s += (f'<line x1="{x+5}" y1="{y+56}" x2="{x+CW-5}" y2="{y+56}" stroke="#D0D0D0"/>'
+                  + text(x + 14, y + 69, "Subtasks", 9, DIM) + text(x + 70, y + 69, "0/5", 9, DIM))
+        return s
 
-# --- 2. assess: one risk, assessed by AI, then signed off by a qualified person.
-def assess():
-    W, H, D = 300, 300, "9s"
-    rows = [("probability", 112), ("impact", 144), ("score", 176)]
-    p = [chrome(W, H, "risk assessment", "R-12"),
-         f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>']
-    # the drafted description (bars), written line by line
-    for i, w in enumerate([236, 250, 198, 120]):
-        p.append(f'<rect x="24" y="{48 + i*11}" width="{w}" height="6" fill="#C9C9C9">'
-                 f'<animate attributeName="width" values="0;0;{w};{w};0" keyTimes="0;{.02+i*.04:.2f};{.06+i*.04:.2f};.95;1" '
-                 f'dur="{D}" repeatCount="indefinite"/></rect>')
-    p.append(f'<line x1="24" y1="92" x2="{W-24}" y2="92" stroke="{INK}" stroke-dasharray="2 3"/>')
-    for label, y in rows:
-        p.append(text(24, y, label, 11))
-    # values arrive one by one
-    p.append(f'<g opacity="1">{fade("0;0;1;1;0", "0;.22;.25;.95;1", D)}'
-             f'<rect x="150.5" y="{112-13.5}" width="96" height="19" fill="none" stroke="{INK}"/>'
-             + text(198, 112, "4 · likely", 11, INK, "middle") + "</g>")
-    p.append(f'<g opacity="1">{fade("0;0;1;1;0", "0;.3;.33;.95;1", D)}'
-             f'<rect x="150.5" y="{144-13.5}" width="112" height="19" fill="none" stroke="{INK}"/>'
-             + text(206, 144, "3 · moderate", 11, INK, "middle") + "</g>")
-    p.append(f'<g opacity="0">{fade("0;0;1;1;0;0", "0;.38;.41;.46;.49;1", D)}'
-             + text(152, 178, "4 × 3", 14, "#555") + "</g>")
-    p.append(f'<g opacity="1">{fade("0;0;1;1;0", "0;.47;.5;.95;1", D)}'
-             + text(152, 182, "12", 24, INK, family=SANS, extra=' font-weight="500"') + "</g>")
-    # status: awaiting, then the qualified person signs
-    p.append(f'<line x1="24" y1="204" x2="{W-24}" y2="204" stroke="{INK}"/>')
-    p.append(f'<g opacity="0">{fade("0;0;1;1;0;0", "0;.52;.55;.7;.73;1", D)}'
-             f'<rect x="24" y="218" width="{W-48}" height="26" fill="{MIST}" stroke="{INK}"/>'
-             + text(W/2, 235, "awaiting qualified sign-off", 11, INK, "middle") + "</g>")
-    p.append(f'<g opacity="1">{fade("0;0;1;1;0", "0;.7;.73;.95;1", D)}'
-             f'<rect x="24" y="218" width="{W-48}" height="26" fill="{AIR}" stroke="{INK}"/>'
-             + text(W/2, 235, "signed off · qualified person", 11, INK, "middle") + "</g>")
-    # the signature: a pen stroke drawn under the status
-    sig = "M40 270 c 10 -14 18 -14 20 0 s 12 12 22 -4 s 14 -10 18 2 s 16 6 26 -6 l 40 0"
-    p.append(f'<path d="{sig}" fill="none" stroke="{INK}" stroke-width="1.6" stroke-linecap="round" '
-             f'stroke-dasharray="220" stroke-dashoffset="0">'
-             f'<animate attributeName="stroke-dashoffset" values="220;220;0;0;220" keyTimes="0;.73;.86;.95;1" '
-             f'dur="{D}" repeatCount="indefinite"/></path>')
-    p.append(text(W - 24, 274, "reviewer", 10, "#555", "end"))
+    # Risk Accepted already holds RR-20
+    p.append(card(RX, TOP + 24, "RR-20", "Medium", [118, 132, 86], sub=True))
+    # Pending Review: RR-9..RR-11 shift up after RR-8 leaves
+    p.append(f'<clipPath id="pc"><rect x="{LX}" y="{TOP+22}" width="{CW}" height="{H-TOP-32}"/></clipPath>')
+    p.append('<g clip-path="url(#pc)"><g>'
+             f'<animateTransform attributeName="transform" type="translate" values="0,0;0,0;0,-62;0,-62;0,0" '
+             f'keyTimes="0;.44;.52;.92;1" dur="{D}" repeatCount="indefinite"/>')
+    for i, (key, level, ws) in enumerate([("RR-9", "Medium", [128, 104, 60]), ("RR-10", "High", [120, 136, 92]),
+                                          ("RR-11", "Medium", [134, 98, 70]), ("RR-12", "Medium", [110, 126, 80])]):
+        p.append(card(LX, TOP + 24 + 62 * (i + 1), key, level, ws))
+    p.append("</g></g>")
+    # RR-8: lifted out of Pending Review and dropped into Risk Accepted
+    p.append('<g>'
+             f'<animateTransform attributeName="transform" type="translate" '
+             f'values="0,0;0,0;0,-4;178,78;178,86;178,86;0,0" keyTimes="0;.12;.16;.36;.4;.92;1" '
+             f'calcMode="spline" keySplines="0 0 1 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1;0 0 1 1;0 0 1 1" '
+             f'dur="{D}" repeatCount="indefinite"/>'
+             + fade("0;1;1;0", "0;.04;.92;1", D)
+             + card(LX, TOP + 24, "RR-8", "High", [124, 140, 96]) + "</g>")
     return svg(W, H, "\n".join(p))
 
 
-# --- 3. register: the whole register, items signed off one after another.
+# --- 2. assess (beside "Our answer"): RR-20, the risk that was accepted. Its
+# fields are filled in, five sub-tasks are raised, and it is accepted.
+def assess():
+    W, H, D = 300, 428, "10s"
+    p = [chrome(W, H, "RR-20", "risk"),
+         f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>',
+         bars(22, 46, [236, 204])]
+    # status: Pending Review, then Risk Accepted
+    p.append(f'<g opacity="0">{fade("1;1;0;0;1", "0;.74;.77;.92;1", D)}{chip(22, 66, "Pending Review", 112)}</g>')
+    p.append(f'<g>{fade("0;0;1;1;0", "0;.74;.77;.92;1", D)}{chip(22, 66, "Risk Accepted", 112, filled=True)}</g>')
+    fields = [("Function Impacted", None), ("Review Interval", "Annually"), ("Review Cadence", "Periodic"),
+              ("Risk Probability", "4 - Likely"), ("Risk Impact", "3 - Moderate"), ("Risk Score", "12"),
+              ("Reviewed Date", "Add date")]
+    for i, (label, value) in enumerate(fields):
+        y = 110 + i * 24
+        p.append(text(22, y, label, 10, DIM))
+        at = f"{.06 + i*.06:.2f}"
+        if value is None:
+            v = f'<rect x="160.5" y="{y-11.5}" width="96" height="16" fill="{PAPER}" stroke="#9A9A9A"/>' + \
+                f'<rect x="168" y="{y-6}" width="80" height="5" fill="{BAR}"/>'
+        elif value == "Add date":
+            v = text(161, y, value, 10, "#9A9A9A")
+        elif value == "12":
+            v = text(161, y + 1, value, 13, INK, extra=f' font-family="{SANS}" font-weight="500"')
+        else:
+            w = 9 + 6.1 * len(value)
+            v = f'<rect x="160.5" y="{y-11.5}" width="{w:.0f}" height="16" fill="{PAPER}" stroke="{INK}"/>' + \
+                text(165, y, value, 10)
+        p.append(f'<g>{show(at, D)}{v}</g>')
+    # sub-tasks: a review and four mitigations, raised one by one
+    p.append(text(22, 290, "Subtasks", 11) + text(W - 22, 290, "0% Done", 9, DIM, "end"))
+    p.append(f'<rect x="22" y="297" width="{W-44}" height="4" fill="#9A9A9A"/><rect x="22" y="297" width="52" height="4" fill="#2F6FEB"/>')
+    subs = [("RR-176", "Open", [64]), ("RR-177", "Pending Review", [84]), ("RR-178", "Pending Review", [80]),
+            ("RR-179", "Pending Review", [86]), ("RR-180", "Pending Review", [70])]
+    for i, (key, status, ws) in enumerate(subs):
+        y = 312 + i * 21
+        row = (text(22, y + 12, key, 9, "#2F6FEB", extra=' text-decoration="underline"')
+               + bars(70, y + 5, ws, gap=0) + priority(170, y + 10, "Medium", label=False)
+               + chip(186, y, status, 92 if status != "Open" else 40, size=9))
+        p.append(f'<g>{show(f"{.5 + i*.05:.2f}", D)}{row}</g>')
+    return svg(W, H, "\n".join(p))
+
+
+# --- 3. register (under the terminal): the list view. Rows are written in one
+# after another; the last one, RR-20, is accepted.
 def register():
-    W, H, D = 736, 302, 12.0
-    BG, RULE, DIM, TXT = "#141414", "#555", "#777", "#D6D6D6"
-    keys = ["R-08", "R-09", "R-10", "R-11", "R-12", "R-13"]
-    prio = ["high", "medium", "high", "medium", "medium", "high"]
-    widths = [(300, 220), (340, 180), (280, 250), (320, 160), (260, 230), (310, 200)]
+    W, D = 736, "12s"
+    BG, RULE, TXT, LINK = "#141414", "#555", "#D6D6D6", "#8DB3FF"
+    rows = [("RR-12", "Medium", (300, 180)), ("RR-13", "Medium", (280, 220)), ("RR-14", "Medium", (320, 160)),
+            ("RR-15", "High", (260, 230)), ("RR-16", "Medium", (310, 190)), ("RR-17", "Medium", (290, 210)),
+            ("RR-18", "Medium", (330, 150)), ("RR-19", "Medium", (270, 240)), ("RR-20", "Medium", (300, 200))]
+    H = 82 + len(rows) * 30 + 34
     p = [f'<rect x=".5" y=".5" width="{W-1}" height="{H-1}" fill="{BG}" stroke="{RULE}"/>',
          f'<line x1="0" y1="30" x2="{W}" y2="30" stroke="{RULE}"/>',
-         text(12, 20, "risk register", 12, "#AAAAAA"),
+         text(12, 20, "risk register · list", 12, "#AAAAAA"),
          text(W - 12, 20, "client instance", 12, "#AAAAAA", "end")]
-    for x, h in [(16, "key"), (90, "item"), (520, "priority"), (606, "status")]:
-        p.append(text(x, 52, h, 11, DIM))
-    for i, k in enumerate(keys):
-        y = 66 + i * 38
-        t0 = 0.1 + 0.12 * i  # when this row is signed off
-        signed = i < 3       # still frame: half the register done
-        p.append(f'<line x1="12" y1="{y+34}" x2="{W-12}" y2="{y+34}" stroke="#262626"/>')
-        # a brief highlight as the reviewer reaches the row
-        p.append(f'<rect x="12" y="{y}" width="{W-24}" height="34" fill="{AIR}" opacity="0">'
-                 f'<animate attributeName="opacity" values="0;0;.14;0;0" keyTimes="0;{t0-.03:.2f};{t0:.2f};{t0+.06:.2f};1" '
-                 f'dur="{D}s" repeatCount="indefinite"/></rect>')
-        p.append(text(16, y + 21, k, 11, TXT))
-        p.append(bars(90, y + 10, widths[i], "#333333", gap=10))
-        p.append(text(520, y + 21, prio[i], 11, "#AAAAAA"))
-        p.append(f'<g opacity="{0 if signed else 1}">{fade("1;1;0;0;1", f"0;{t0:.2f};{t0+.02:.2f};.94;1", f"{D}s")}'
-                 f'<rect x="606.5" y="{y+7.5}" width="112" height="19" fill="none" stroke="{DIM}"/>'
-                 + text(662, y + 21, "pending review", 10, "#AAAAAA", "middle") + "</g>")
-        p.append(f'<g opacity="{1 if signed else 0}">{fade("0;0;1;1;0", f"0;{t0:.2f};{t0+.02:.2f};.94;1", f"{D}s")}'
-                 f'<rect x="606" y="{y+7}" width="112" height="20" fill="{AIR}"/>'
-                 + text(662, y + 21, "signed off", 10, INK, "middle") + "</g>")
+    cols = [(16, "Work"), (430, "Priority"), (530, "Status"), (640, "Resolution")]
+    for x, h in cols:
+        p.append(text(x, 54, h, 11, "#8A8A8A"))
+    p.append(f'<line x1="12" y1="64" x2="{W-12}" y2="64" stroke="#333"/>')
+    for i, (key, level, ws) in enumerate(rows):
+        y = 70 + i * 30
+        at = f"{.04 + i*.06:.2f}"
+        last = i == len(rows) - 1
+        row = (text(16, y + 18, key, 11, LINK, extra=' text-decoration="underline"')
+               + f'<rect x="72" y="{y+9}" width="{ws[0]}" height="6" fill="#3A3A3A"/>'
+               + f'<rect x="72" y="{y+17}" width="{ws[1]}" height="6" fill="#3A3A3A"/>'
+               + priority(430, y + 15, level, fill=TXT)
+               + text(640, y + 18, "Unresolved", 11, TXT)
+               + f'<line x1="12" y1="{y+29}" x2="{W-12}" y2="{y+29}" stroke="#262626"/>')
+        status = (f'<rect x="530.5" y="{y+5.5}" width="98" height="18" fill="none" stroke="#777"/>'
+                  + text(579.5, y + 18, "Pending Review", 10, "#BBBBBB", "middle"))
+        if last:
+            status = (f'<g opacity="0">{fade("1;1;0;0;1", "0;.72;.75;.92;1", D)}{status}</g>'
+                      f'<g>{fade("0;0;1;1;0", "0;.72;.75;.92;1", D)}'
+                      f'<rect x="530" y="{y+5}" width="98" height="19" fill="{AIR}"/>'
+                      + text(579, y + 18, "Risk Accepted", 10, INK, "middle") + "</g>")
+        p.append(f'<g>{show(at, D)}{row}{status}</g>')
+    y = 70 + len(rows) * 30
+    p.append(text(W / 2, y + 22, "50 of 168", 11, "#AAAAAA", "middle"))
     return svg(W, H, "\n".join(p))
 
 
 def still(s):
-    s = re.sub(r"<animate(Transform)?\b[^>]*/>", "", s)
-    return s
+    return re.sub(r"<animate(Transform)?\b[^>]*/>", "", s)
 
 
 def main():
