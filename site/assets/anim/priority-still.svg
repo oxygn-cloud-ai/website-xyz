@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="236" viewBox="0 0 420 236" font-family="Menlo, ui-monospace, monospace">
+<rect x=".5" y=".5" width="419" height="235" fill="#DEDEDE" stroke="#1E1E1E"/>
+<rect x="3.5" y="3.5" width="413" height="229" fill="none" stroke="#1E1E1E"/>
+<rect x="4" y="4" width="412" height="22" fill="#1E1E1E"/>
+<text x="12" y="19" font-size="12" fill="#FEFEFE" text-anchor="start">risk register · by priority</text>
+<text x="408" y="19" font-size="12" fill="#FEFEFE" text-anchor="end">168</text>
+<rect x="12" y="34" width="396" height="190" fill="#FEFEFE" stroke="#1E1E1E"/>
+<path d="M26 61 l4 -4 l4 4 M26 65 l4 -4 l4 4 M26 69 l4 -4 l4 4" fill="none" stroke="#CD1317" stroke-width="1.6"/><text x="42" y="69" font-size="11" fill="#1E1E1E" text-anchor="start">Highest</text>
+<rect x="112" y="58" width="196" height="14" fill="#E4E4E4"/><rect x="112" y="58" width="6" height="14" fill="#1E1E1E"></rect>
+<text x="396" y="70" font-size="12" fill="#1E1E1E" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-weight="500">5</text><text x="316" y="70" font-size="9" fill="#666666" text-anchor="start">3.0%</text>
+<path d="M26 102 l4 -4 l4 4 M26 106 l4 -4 l4 4" fill="none" stroke="#E5493A" stroke-width="1.6"/><text x="42" y="107" font-size="11" fill="#1E1E1E" text-anchor="start">High</text>
+<rect x="112" y="96" width="196" height="14" fill="#E4E4E4"/><rect x="112" y="96" width="47" height="14" fill="#4A4A4A"></rect>
+<text x="396" y="108" font-size="12" fill="#1E1E1E" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-weight="500">40</text><text x="316" y="108" font-size="9" fill="#666666" text-anchor="start">23.8%</text>
+<path d="M26 138 h8 M26 142 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><text x="42" y="145" font-size="11" fill="#1E1E1E" text-anchor="start">Medium</text>
+<rect x="112" y="134" width="196" height="14" fill="#E4E4E4"/><rect x="112" y="134" width="142" height="14" fill="#9A9A9A"></rect>
+<text x="396" y="146" font-size="12" fill="#1E1E1E" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-weight="500">122</text><text x="316" y="146" font-size="9" fill="#666666" text-anchor="start">72.6%</text>
+<path d="M26 176 l4 4 l4 -4 M26 180 l4 4 l4 -4" fill="none" stroke="#2A8735" stroke-width="1.6"/><text x="42" y="183" font-size="11" fill="#1E1E1E" text-anchor="start">Low</text>
+<rect x="112" y="172" width="196" height="14" fill="#E4E4E4"/><rect x="112" y="172" width="2" height="14" fill="#8A8A8A"></rect>
+<text x="396" y="184" font-size="12" fill="#1E1E1E" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-weight="500">1</text><text x="316" y="184" font-size="9" fill="#666666" text-anchor="start">0.6%</text>
+<text x="26" y="216" font-size="9" fill="#666666" text-anchor="start">each risk arrives scored for probability and impact</text>
+</svg>

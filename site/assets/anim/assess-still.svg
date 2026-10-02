@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="428" viewBox="0 0 300 428" font-family="Menlo, ui-monospace, monospace">
-<rect x=".5" y=".5" width="299" height="427" fill="#DEDEDE" stroke="#1E1E1E"/>
-<rect x="3.5" y="3.5" width="293" height="421" fill="none" stroke="#1E1E1E"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="386" viewBox="0 0 300 386" font-family="Menlo, ui-monospace, monospace">
+<rect x=".5" y=".5" width="299" height="385" fill="#DEDEDE" stroke="#1E1E1E"/>
+<rect x="3.5" y="3.5" width="293" height="379" fill="none" stroke="#1E1E1E"/>
 <rect x="4" y="4" width="292" height="22" fill="#1E1E1E"/>
 <text x="12" y="19" font-size="12" fill="#FEFEFE" text-anchor="start">RR-20</text>
 <text x="288" y="19" font-size="12" fill="#FEFEFE" text-anchor="end">risk</text>
-<rect x="12" y="34" width="276" height="382" fill="#FEFEFE" stroke="#1E1E1E"/>
+<rect x="12" y="34" width="276" height="340" fill="#FEFEFE" stroke="#1E1E1E"/>
 <rect x="22" y="46" width="236" height="6" fill="#C9C9C9"/><rect x="22" y="56" width="204" height="6" fill="#C9C9C9"/>
 <g opacity="0"><rect x="22.5" y="66.5" width="112" height="17" fill="#FEFEFE" stroke="#666666"/><text x="78.5" y="78.5" font-size="10" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
 <g><rect x="22.5" y="66.5" width="112" height="17" fill="#8DB3FF" stroke="#1E1E1E"/><text x="78.5" y="78.5" font-size="10" fill="#1E1E1E" text-anchor="middle">Risk Accepted</text></g>
@@ -26,7 +26,5 @@
 <rect x="22" y="297" width="256" height="4" fill="#9A9A9A"/><rect x="22" y="297" width="52" height="4" fill="#2F6FEB"/>
 <g><text x="22" y="324" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-176</text><rect x="70" y="317" width="64" height="6" fill="#C9C9C9"/><path d="M170 318 h8 M170 322 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="312.5" width="40" height="17" fill="#FEFEFE" stroke="#666666"/><text x="206.5" y="324.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Open</text></g>
 <g><text x="22" y="345" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-177</text><rect x="70" y="338" width="84" height="6" fill="#C9C9C9"/><path d="M170 339 h8 M170 343 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="333.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="345.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
-<g><text x="22" y="366" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-178</text><rect x="70" y="359" width="80" height="6" fill="#C9C9C9"/><path d="M170 360 h8 M170 364 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="354.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="366.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
-<g><text x="22" y="387" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-179</text><rect x="70" y="380" width="86" height="6" fill="#C9C9C9"/><path d="M170 381 h8 M170 385 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="375.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="387.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
-<g><text x="22" y="408" font-size="9" fill="#2F6FEB" text-anchor="start" text-decoration="underline">RR-180</text><rect x="70" y="401" width="70" height="6" fill="#C9C9C9"/><path d="M170 402 h8 M170 406 h8" fill="none" stroke="#F79232" stroke-width="1.8"/><rect x="186.5" y="396.5" width="92" height="17" fill="#FEFEFE" stroke="#666666"/><text x="232.5" y="408.5" font-size="9" fill="#1E1E1E" text-anchor="middle">Pending Review</text></g>
+<g><text x="22" y="368" font-size="9" fill="#666666" text-anchor="start">+3 more</text></g>
 </svg>

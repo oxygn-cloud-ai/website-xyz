@@ -141,7 +141,7 @@ def queue():
 # --- 2. assess (beside "Our answer"): RR-20, the risk that was accepted. Its
 # fields are filled in, five sub-tasks are raised, and it is accepted.
 def assess():
-    W, H, D = 300, 428, "10s"
+    W, H, D = 300, 386, "10s"
     p = [chrome(W, H, "RR-20", "risk"),
          f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>',
          bars(22, 46, [236, 204])]
@@ -170,14 +170,15 @@ def assess():
     # sub-tasks: a review and four mitigations, raised one by one
     p.append(text(22, 290, "Subtasks", 11) + text(W - 22, 290, "0% Done", 9, DIM, "end"))
     p.append(f'<rect x="22" y="297" width="{W-44}" height="4" fill="#9A9A9A"/><rect x="22" y="297" width="52" height="4" fill="#2F6FEB"/>')
-    subs = [("RR-176", "Open", [64]), ("RR-177", "Pending Review", [84]), ("RR-178", "Pending Review", [80]),
-            ("RR-179", "Pending Review", [86]), ("RR-180", "Pending Review", [70])]
+    # a review and four mitigations; two shown, the rest summarised
+    subs = [("RR-176", "Open", [64]), ("RR-177", "Pending Review", [84])]
     for i, (key, status, ws) in enumerate(subs):
         y = 312 + i * 21
         row = (text(22, y + 12, key, 9, "#2F6FEB", extra=' text-decoration="underline"')
                + bars(70, y + 5, ws, gap=0) + priority(170, y + 10, "Medium", label=False)
                + chip(186, y, status, 92 if status != "Open" else 40, size=9))
         p.append(f'<g>{show(f"{.5 + i*.05:.2f}", D)}{row}</g>')
+    p.append(f'<g>{show(".6", D)}{text(22, 368, "+3 more", 9, DIM)}</g>')
     return svg(W, H, "\n".join(p))
 
 
@@ -186,38 +187,166 @@ def assess():
 def register():
     W, D = 736, "12s"
     BG, RULE, TXT, LINK = "#141414", "#555", "#D6D6D6", "#8DB3FF"
-    rows = [("RR-12", "Medium", (300, 180)), ("RR-13", "Medium", (280, 220)), ("RR-14", "Medium", (320, 160)),
-            ("RR-15", "High", (260, 230)), ("RR-16", "Medium", (310, 190)), ("RR-17", "Medium", (290, 210)),
-            ("RR-18", "Medium", (330, 150)), ("RR-19", "Medium", (270, 240)), ("RR-20", "Medium", (300, 200))]
-    H = 82 + len(rows) * 30 + 34
+    rows = [("RR-17", "Medium", (330, 210)), ("RR-18", "Medium", (380, 170)),
+            ("RR-19", "Medium", (300, 260)), ("RR-20", "Medium", (350, 230))]
+    H = 82 + len(rows) * 34 + 34
     p = [f'<rect x=".5" y=".5" width="{W-1}" height="{H-1}" fill="{BG}" stroke="{RULE}"/>',
          f'<line x1="0" y1="30" x2="{W}" y2="30" stroke="{RULE}"/>',
          text(12, 20, "risk register · list", 12, "#AAAAAA"),
          text(W - 12, 20, "client instance", 12, "#AAAAAA", "end")]
-    cols = [(16, "Work"), (430, "Priority"), (530, "Status"), (640, "Resolution")]
-    for x, h in cols:
+    for x, h in [(16, "Work"), (500, "Priority"), (610, "Status")]:
         p.append(text(x, 54, h, 11, "#8A8A8A"))
     p.append(f'<line x1="12" y1="64" x2="{W-12}" y2="64" stroke="#333"/>')
     for i, (key, level, ws) in enumerate(rows):
-        y = 70 + i * 30
-        at = f"{.04 + i*.06:.2f}"
+        y = 70 + i * 34
         last = i == len(rows) - 1
-        row = (text(16, y + 18, key, 11, LINK, extra=' text-decoration="underline"')
-               + f'<rect x="72" y="{y+9}" width="{ws[0]}" height="6" fill="#3A3A3A"/>'
-               + f'<rect x="72" y="{y+17}" width="{ws[1]}" height="6" fill="#3A3A3A"/>'
-               + priority(430, y + 15, level, fill=TXT)
-               + text(640, y + 18, "Unresolved", 11, TXT)
-               + f'<line x1="12" y1="{y+29}" x2="{W-12}" y2="{y+29}" stroke="#262626"/>')
-        status = (f'<rect x="530.5" y="{y+5.5}" width="98" height="18" fill="none" stroke="#777"/>'
-                  + text(579.5, y + 18, "Pending Review", 10, "#BBBBBB", "middle"))
+        row = (text(16, y + 20, key, 11, LINK, extra=' text-decoration="underline"')
+               + f'<rect x="72" y="{y+11}" width="{ws[0]}" height="6" fill="#3A3A3A"/>'
+               + f'<rect x="72" y="{y+19}" width="{ws[1]}" height="6" fill="#3A3A3A"/>'
+               + priority(500, y + 17, level, fill=TXT)
+               + f'<line x1="12" y1="{y+33}" x2="{W-12}" y2="{y+33}" stroke="#262626"/>')
+        status = (f'<rect x="610.5" y="{y+7.5}" width="104" height="18" fill="none" stroke="#777"/>'
+                  + text(662.5, y + 20, "Pending Review", 10, "#BBBBBB", "middle"))
         if last:
-            status = (f'<g opacity="0">{fade("1;1;0;0;1", "0;.72;.75;.92;1", D)}{status}</g>'
-                      f'<g>{fade("0;0;1;1;0", "0;.72;.75;.92;1", D)}'
-                      f'<rect x="530" y="{y+5}" width="98" height="19" fill="{AIR}"/>'
-                      + text(579, y + 18, "Risk Accepted", 10, INK, "middle") + "</g>")
-        p.append(f'<g>{show(at, D)}{row}{status}</g>')
-    y = 70 + len(rows) * 30
+            status = (f'<g opacity="0">{fade("1;1;0;0;1", "0;.62;.65;.92;1", D)}{status}</g>'
+                      f'<g>{fade("0;0;1;1;0", "0;.62;.65;.92;1", D)}'
+                      f'<rect x="610" y="{y+7}" width="104" height="19" fill="{AIR}"/>'
+                      + text(662, y + 20, "Risk Accepted", 10, INK, "middle") + "</g>")
+        p.append(f'<g>{show(f"{.05 + i*.1:.2f}", D)}{row}{status}</g>')
+    y = 70 + len(rows) * 34
     p.append(text(W / 2, y + 22, "50 of 168", 11, "#AAAAAA", "middle"))
+    return svg(W, H, "\n".join(p))
+
+
+# --- The register as written: every risk in creation order, with its real
+# priority, and the seconds after the first risk at which it was written.
+PRIO = ("HMHMMMMHMMMMMMMMMMMMHMHMMMMMMHMMMHHXMHMMHHHHHMXMMMHMMMXMMMMMMMMMMMLMMMMMMMMHMMHMMHMMHHMMMM"
+        "HMHMHHMMMMMMMMMXMHHHMMXMMHMMMHMMMHHMMMMMMMHHMMMHMMHMHHMMMMHMHMMHMMMMMMMMMMMMMM")
+SECS = [0, 57, 58, 60, 62, 63, 65, 66, 68, 69, 71, 73, 74, 75, 77, 79, 80, 82, 83, 85, 86, 88, 89, 91, 93, 94, 96,
+        98, 99, 101, 102, 104, 106, 107, 109, 110, 112, 114, 115, 117, 118, 120, 121, 123, 125, 126, 128, 130, 131,
+        133, 134, 136, 138, 139, 141, 142, 144, 145, 147, 148, 150, 151, 153, 154, 156, 157, 159, 160, 162, 163, 165,
+        166, 168, 169, 174, 175, 177, 178, 180, 181, 183, 184, 186, 188, 189, 191, 192, 194, 195, 197, 198, 200, 202,
+        203, 205, 206, 208, 210, 211, 213, 214, 216, 218, 219, 221, 222, 224, 226, 227, 229, 230, 232, 233, 235, 237,
+        238, 240, 241, 243, 245, 246, 248, 249, 251, 252, 254, 255, 257, 258, 260, 262, 263, 265, 266, 268, 270, 271,
+        272, 274, 275, 277, 278, 280, 281, 283, 284, 286, 288, 296, 298, 299, 301, 302, 304, 305, 307, 308, 310, 311,
+        313, 314, 316, 318, 319, 321, 322, 324, 326]
+PER_MINUTE = [1, 20, 37, 38, 38, 34]   # risks written in each clock minute
+RR20 = 12                              # RR-20's place in the order written
+NAMES = {"X": "Highest", "H": "High", "M": "Medium", "L": "Low"}
+SHADE = {"X": INK, "H": "#4A4A4A", "M": "#9A9A9A", "L": "#D0D0D0"}
+assert len(PRIO) == len(SECS) == sum(PER_MINUTE) == 168 and SECS[-1] == 326
+assert {k: PRIO.count(k) for k in "XHML"} == {"X": 5, "H": 40, "M": 122, "L": 1}
+
+COLS, CELL, GAP, GX, GY = 14, 20, 4, 32, 58
+
+
+def cell_xy(i):
+    return GX + (i % COLS) * (CELL + GAP), GY + (i // COLS) * (CELL + GAP)
+
+
+def legend(y, items):
+    x, out = 32, []
+    for label, fill, stroke in items:
+        out.append(f'<rect x="{x+.5}" y="{y-9.5}" width="10" height="10" fill="{fill}" stroke="{stroke}"/>'
+                   + text(x + 15, y, label, 10))
+        x += 22 + 6.1 * len(label)
+    return "".join(out)
+
+
+# --- written: AI execution. 168 cells appear at the real pace they were written.
+def written():
+    W, H, D = 400, 414, 12.0
+    p = [chrome(W, H, "AI execution", "risk register")]
+    for i, (k, t) in enumerate(zip(PRIO, SECS)):
+        x, y = cell_xy(i)
+        at = .04 + .66 * t / 326
+        p.append(f'<rect x="{x}" y="{y}" width="{CELL}" height="{CELL}" fill="{SHADE[k]}">'
+                 + fade("0;0;1;1;0", f"0;{at:.3f};{at+.01:.3f};.93;1", f"{D}s") + "</rect>")
+    gb = GY + 12 * (CELL + GAP) + 6
+    # the clock: a bar that runs for the 5 min 26 s, scaled
+    p.append(f'<rect x="32" y="{gb}" width="336" height="4" fill="#C9C9C9"/>'
+             f'<rect x="32" y="{gb}" width="336" height="4" fill="{INK}">'
+             f'<animate attributeName="width" values="0;0;336;336;0" keyTimes="0;.04;.7;.93;1" dur="{D}s" repeatCount="indefinite"/></rect>')
+    p.append(text(32, gb + 24, "168", 18, INK, extra=f' font-family="{SANS}" font-weight="500"')
+             + text(70, gb + 24, "risks written", 11) + text(W - 32, gb + 24, "5 min 26 s", 11, INK, "end"))
+    p.append(legend(gb + 44, [(NAMES[k], SHADE[k], SHADE[k]) for k in "XHML"]))
+    return svg(W, H, "\n".join(p))
+
+
+# --- decided: Human authority. The same 168; one has been accepted by a person.
+def decided():
+    W, H, D = 400, 414, "6s"
+    p = [chrome(W, H, "Human authority", "risk register")]
+    for i in range(168):
+        x, y = cell_xy(i)
+        if i != RR20:
+            p.append(f'<rect x="{x+.5}" y="{y+.5}" width="{CELL-1}" height="{CELL-1}" fill="{PAPER}" stroke="#9A9A9A"/>')
+    x, y = cell_xy(RR20)
+    p.append(f'<rect x="{x}" y="{y}" width="{CELL}" height="{CELL}" fill="{AIR}" stroke="{INK}"/>')
+    p.append(f'<rect x="{x-4.5}" y="{y-4.5}" width="{CELL+9}" height="{CELL+9}" fill="none" stroke="{INK}">'
+             + fade("0;1;1;0;0", "0;.15;.6;.75;1", D) + "</rect>")
+    # callout from the accepted cell
+    p.append(f'<rect x="{x+CELL/2-148}" y="{y-26}" width="148" height="17" fill="{INK}"/>'
+             + text(x + CELL / 2 - 142, y - 14, "RR-20 · Risk Accepted", 10, PAPER)
+             + f'<line x1="{x+CELL/2}" y1="{y-9}" x2="{x+CELL/2}" y2="{y-5}" stroke="{INK}"/>')
+    gb = GY + 12 * (CELL + GAP) + 6
+    p.append(f'<rect x="32" y="{gb}" width="336" height="4" fill="#C9C9C9"/><rect x="32" y="{gb}" width="2" height="4" fill="{AIR}"/>')
+    p.append(text(32, gb + 24, "1", 18, INK, extra=f' font-family="{SANS}" font-weight="500"')
+             + text(48, gb + 24, "accepted by a person", 11) + text(W - 32, gb + 24, "167 to review", 11, INK, "end"))
+    p.append(legend(gb + 44, [("Risk Accepted", AIR, INK), ("Pending Review", PAPER, "#9A9A9A")]))
+    return svg(W, H, "\n".join(p))
+
+
+def glyph(x, y, level):
+    """Jira-style priority marks, including Highest and Low."""
+    if level == "Highest":
+        return (f'<path d="M{x} {y-5} l4 -4 l4 4 M{x} {y-1} l4 -4 l4 4 M{x} {y+3} l4 -4 l4 4" fill="none" '
+                f'stroke="#CD1317" stroke-width="1.6"/>')
+    if level == "Low":
+        return f'<path d="M{x} {y-4} l4 4 l4 -4 M{x} {y} l4 4 l4 -4" fill="none" stroke="#2A8735" stroke-width="1.6"/>'
+    return priority(x, y, level, label=False)
+
+
+# --- priority: the register by priority, bars growing to the real counts.
+def priority_chart():
+    W, H, D = 420, 236, "8s"
+    p = [chrome(W, H, "risk register · by priority", "168")]
+    p.append(f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>')
+    track = 196
+    for i, k in enumerate("XHML"):
+        n, y = PRIO.count(k), 66 + i * 38
+        w = max(2, round(track * n / 168))
+        p.append(glyph(26, y, NAMES[k]) + text(42, y + 3, NAMES[k], 11))
+        p.append(f'<rect x="112" y="{y-8}" width="{track}" height="14" fill="#E4E4E4"/>'
+                 f'<rect x="112" y="{y-8}" width="{w}" height="14" fill="{SHADE[k] if k != "L" else "#8A8A8A"}">'
+                 f'<animate attributeName="width" values="0;0;{w};{w};0" keyTimes="0;{.05+i*.06:.2f};{.3+i*.06:.2f};.93;1" '
+                 f'dur="{D}" repeatCount="indefinite"/></rect>')
+        p.append(text(W - 24, y + 4, f"{n}", 12, INK, "end", extra=f' font-family="{SANS}" font-weight="500"')
+                 + text(112 + track + 8, y + 4, f"{100*n/168:.1f}%", 9, DIM))
+    p.append(text(26, H - 20, "each risk arrives scored for probability and impact", 9, DIM))
+    return svg(W, H, "\n".join(p))
+
+
+# --- rate: risks written in each clock minute.
+def rate():
+    W, H, D = 420, 236, "8s"
+    p = [chrome(W, H, "risks written per minute", "peak 38")]
+    p.append(f'<rect x="12" y="34" width="{W-24}" height="{H-46}" fill="{PAPER}" stroke="{INK}"/>')
+    base, top, bw = 186, 64, 40
+    for t in range(0, 41, 10):
+        y = base - (base - top) * t / 38
+        if t <= 38:
+            p.append(f'<line x1="40" y1="{y:.0f}" x2="{W-24}" y2="{y:.0f}" stroke="#E4E4E4"/>' + text(34, y + 3, str(t), 8, DIM, "end"))
+    for i, n in enumerate(PER_MINUTE):
+        h = (base - top) * n / 38
+        x = 56 + i * 58
+        p.append(f'<rect x="{x}" y="{base-h:.0f}" width="{bw}" height="{h:.0f}" fill="{INK}">'
+                 f'<animate attributeName="height" values="0;0;{h:.0f};{h:.0f};0" keyTimes="0;{.05+i*.08:.2f};{.2+i*.08:.2f};.93;1" dur="{D}" repeatCount="indefinite"/>'
+                 f'<animate attributeName="y" values="{base};{base};{base-h:.0f};{base-h:.0f};{base}" keyTimes="0;{.05+i*.08:.2f};{.2+i*.08:.2f};.93;1" dur="{D}" repeatCount="indefinite"/></rect>')
+        p.append(f'<g>{fade("0;0;1;1;0", f"0;{.2+i*.08:.2f};{.23+i*.08:.2f};.93;1", D)}'
+                 + text(x + bw / 2, base - h - 6, str(n), 11, INK, "middle") + "</g>")
+        p.append(text(x + bw / 2, base + 14, f"min {i+1}", 9, DIM, "middle"))
+    p.append(text(26, H - 20, "after the first, one every 1.6 s", 9, DIM))
     return svg(W, H, "\n".join(p))
 
 
@@ -227,7 +356,8 @@ def still(s):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    for name, build in [("queue", queue), ("assess", assess), ("register", register)]:
+    for name, build in [("queue", queue), ("assess", assess), ("register", register), ("written", written),
+                        ("decided", decided), ("priority", priority_chart), ("rate", rate)]:
         s = build()
         (OUT / f"{name}.svg").write_text(s)
         (OUT / f"{name}-still.svg").write_text(still(s))

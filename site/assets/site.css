@@ -39,12 +39,10 @@ nav a.logo img{display:block;height:2.1rem;width:auto}
 .anim img{display:block;width:100%;height:auto}
 .anim.a{align-self:start;max-width:20rem}
 .anim.r{max-width:46rem;margin:2.5rem auto 0}
-.hero-anim{position:relative;z-index:1;width:min(23rem,100%);text-align:center}
-.hero-anim .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
 .leader{display:flex;gap:.4rem;justify-content:center;align-items:baseline;font-weight:500;font-size:1.05rem;padding:2rem var(--pad) 0}
 .leader{white-space:nowrap;font-size:clamp(.9rem,2.8vw,1.05rem)}
 .leader i{flex:0 1 12rem;min-width:1.5rem;border-bottom:2px dotted currentColor;transform:translateY(-.25rem)}
-.headline{position:relative;padding:2.5rem var(--pad) 6rem}
+.headline{position:relative;padding:2.5rem var(--pad) 5rem;text-align:center}
 .hash{position:absolute;left:calc(var(--pad) * .6);top:3rem;writing-mode:vertical-rl;transform:rotate(180deg);font:400 .625rem var(--mono);letter-spacing:.02em;opacity:.8}
 .headline .display span{display:block}
 @media (max-width:56rem){.hash{display:none}}
@@ -123,3 +121,116 @@ body.result{min-height:100vh;display:grid;place-items:center}
 footer{background:var(--ink);color:var(--paper);padding:4rem var(--pad) 1.2rem;overflow:hidden}
 footer .word{display:block;width:min(56rem,100%);height:auto;margin:0 auto}
 footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;color:#aaa}
+
+/* ---- windows: the site's retro window, used everywhere below ---- */
+.w{position:relative;background:var(--mist);border:1px solid var(--ink);box-shadow:inset 0 0 0 3px var(--mist),inset 0 0 0 4px var(--ink);text-align:left}
+.wb{display:flex;justify-content:space-between;gap:1rem;background:var(--ink);color:var(--paper);padding:.15rem .5rem;white-space:nowrap;overflow:hidden}
+.wi{padding:.8rem .9rem 1rem}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.6rem}
+.chips li{background:#CFCFCF;padding:.05rem .4rem}
+.chips li::before{content:"\2723 ";opacity:.7}
+
+/* hero: news windows */
+.news{position:relative;z-index:1;display:grid;gap:1.1rem;width:min(25rem,100%)}
+.news .wi{text-align:center;font:400 .875rem/1.45 var(--mono)}
+.news .wi b{display:block;font-weight:400;margin-bottom:.15rem}
+.news .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
+.news .ul{display:inline-block;margin-top:.5rem;text-underline-offset:.2em}
+.news .w{animation:drop .6s cubic-bezier(.2,.8,.2,1) both}
+.news .n2{animation-delay:.25s}
+@keyframes drop{from{opacity:0;transform:translateY(-.8rem)}to{opacity:1;transform:none}}
+.dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;background:var(--air);margin-right:.2rem;animation:blink 1.6s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.big{display:inline-block;margin-top:3rem;font:500 clamp(2.4rem,5vw,4.4rem)/1 var(--grot);letter-spacing:-.045em;text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.14em}
+.big:hover{text-decoration-thickness:.12em}
+
+/* ---- the desk: a full-bleed scene of the workforce's windows ---- */
+.desk{background:radial-gradient(rgba(30,30,30,.28) .9px,transparent 1.2px) 0 0/6px 6px,var(--air);padding:clamp(2rem,5vw,4.5rem) var(--pad)}
+.os{position:relative;border:1px solid var(--ink);padding:3rem 1rem 1.5rem;display:grid;gap:1.2rem;overflow:hidden}
+.os .tag{position:absolute;left:0;top:0;background:var(--ink);color:var(--paper);padding:.1rem .45rem;z-index:3}
+.role .wi{display:grid;grid-template-columns:auto 1fr;gap:.2rem .7rem;align-items:center;font:400 .875rem var(--mono)}
+.role .chips{grid-column:1/-1;margin-top:.3rem}
+.glyph{font:400 1.9rem/1 var(--mono);background:var(--ink);color:var(--mist);padding:.15rem .3rem;grid-row:span 1}
+.tally .wi{display:grid;gap:.3rem}
+.count{font:500 clamp(3rem,6vw,4.6rem)/.9 var(--grot);letter-spacing:-.05em}
+.ver .wi{font-size:.8rem}
+.blob{display:none}
+.os > .board{order:-1}
+@property --n{syntax:"<integer>";inherits:false;initial-value:168}
+@supports (animation-timeline: view()){
+  .count{color:transparent;position:relative;counter-reset:n var(--n);animation:tally 7s cubic-bezier(.3,.6,.4,1) infinite}
+  .count::after{content:counter(n);position:absolute;left:0;top:0;color:var(--ink)}
+  @keyframes tally{0%{--n:0}65%,100%{--n:168}}
+}
+@media (min-width:64rem){
+  .os{display:block;height:38rem;padding:0}
+  .os > .w{position:absolute;width:16rem;z-index:2}
+  .r1{left:4%;top:9%}
+  .r2{left:11%;top:31%}
+  .r3{right:4%;top:7%}
+  .r4{right:10%;top:30%}
+  .os > .board{position:absolute;width:27rem;left:50%;top:8%;margin-left:-13.5rem;z-index:1;box-shadow:.6rem .6rem 0 rgba(30,30,30,.18)}
+  .r5{left:5%;bottom:7%;width:14rem}
+  .r6{right:3%;bottom:5%;width:13rem}
+  .blob{display:block;position:absolute;border-radius:50%;z-index:0;
+    background:radial-gradient(var(--ink) 1.3px,transparent 1.6px) 0 0/5px 5px;
+    -webkit-mask-image:radial-gradient(closest-side,#000 15%,rgba(0,0,0,.55) 55%,transparent);mask-image:radial-gradient(closest-side,#000 15%,rgba(0,0,0,.55) 55%,transparent)}
+  .b1{width:26rem;height:26rem;left:-6rem;bottom:-9rem}
+  .b2{width:30rem;height:30rem;right:-8rem;bottom:-12rem}
+  .b3{width:20rem;height:20rem;left:38%;bottom:-13rem;opacity:.8}
+}
+@supports (animation-timeline: view()){
+  .os > .w,.os > .board{animation:pop linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+  .os > .r2,.os > .r4{animation-range:entry 15% entry 85%}
+  .os > .r5,.os > .r6{animation-range:entry 25% entry 100%}
+  @keyframes pop{from{opacity:0;translate:0 1.2rem;scale:.97}to{opacity:1;translate:0 0;scale:1}}
+}
+
+/* ---- the claim: the real numbers ---- */
+.claim{padding:clamp(4.5rem,8vw,7rem) var(--pad);text-align:center}
+.claim .display span{display:block}
+.note{margin:-1.6rem 0 3rem}
+.note a{text-underline-offset:.2em}
+.split{display:grid;gap:2rem;max-width:60rem;margin:0 auto;padding:2rem;background:radial-gradient(rgba(30,30,30,.22) .9px,transparent 1.2px) 0 0/6px 6px,#EDEDED;border:1px solid var(--ink)}
+@media (min-width:46rem){.split{grid-template-columns:1fr 1fr}}
+.split figure,.pair figure{margin:0}
+.split figcaption,.pair figcaption{display:grid;gap:.1rem;margin-top:1rem;text-align:left;font-size:1rem;color:#444}
+.split figcaption b,.pair figcaption b{color:var(--ink);font-weight:500}
+.claim-sub{margin-top:2.5rem;font:500 clamp(1.5rem,2.6vw,2.2rem)/1.1 var(--grot);letter-spacing:-.03em}
+
+/* ---- charts ---- */
+.pair{display:grid;gap:2.5rem;max-width:62rem;margin:0 auto}
+@media (min-width:52rem){.pair{grid-template-columns:1fr 1fr}}
+.pair figcaption{max-width:26rem}
+
+/* ---- six functions as windows ---- */
+.fns{display:grid;gap:1.4rem}
+@media (min-width:40rem){.fns{grid-template-columns:1fr 1fr}}
+@media (min-width:64rem){.fns{grid-template-columns:repeat(3,1fr)}}
+.fn .wb{font-size:.875rem}
+.fn .chips{margin-top:0;font-size:.8rem}
+.fn{transition:translate .2s}
+.fn:hover{translate:0 -.2rem}
+@supports (animation-timeline: view()){
+  .fn{animation:pop linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
+}
+
+/* ---- FAQ: native details, no script ---- */
+.faq{background:var(--paper)}
+.qa{max-width:52rem;margin:0 auto;border-bottom:1px solid var(--ink)}
+.qa details{border-top:1px solid var(--ink)}
+.qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:1rem;padding:1.1rem 0;font:500 clamp(1.2rem,2vw,1.6rem)/1.15 var(--grot);letter-spacing:-.02em}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";font:400 1.5rem/1 var(--mono);transition:rotate .2s}
+.qa details[open] summary::after{rotate:45deg}
+.qa p{padding:0 0 1.4rem;max-width:42rem;font-size:1.1rem;line-height:1.4}
+.qa p a{text-underline-offset:.2em}
+
+/* ---- close: big mark and the one action ---- */
+.close{padding:clamp(4rem,8vw,7rem) var(--pad);background:var(--sage);text-align:center}
+.go{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:1rem 2rem}
+.go h2{font:500 clamp(1.6rem,3.2vw,2.8rem)/1 var(--grot);letter-spacing:-.04em;max-width:22ch}
+.go i{font-style:normal;font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:-.2em}
+.go a{font:500 clamp(2.2rem,4.6vw,4rem)/1 var(--grot);letter-spacing:-.045em;text-decoration-thickness:.07em;text-underline-offset:.14em}
+
+@media (prefers-reduced-motion:reduce){.w,.dot,.count,.fn,.news .w{animation:none}.count{color:inherit}.count::after{content:none}}
