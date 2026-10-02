@@ -34,11 +34,13 @@ nav a.logo img{display:block;height:2.1rem;width:auto}
 .sky::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.55;mix-blend-mode:multiply;pointer-events:none;
   -webkit-mask-image:linear-gradient(#000 50%,transparent 95%);mask-image:linear-gradient(#000 50%,transparent 95%);
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .5 0 0 0 0 .75 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.win{position:relative;z-index:1;width:min(23rem,100%);background:var(--mist);border:1px solid var(--ink);box-shadow:inset 0 0 0 3px var(--mist),inset 0 0 0 4px var(--ink)}
-.win .bar{background:var(--ink);color:var(--paper);padding:.2rem .5rem;display:flex;justify-content:space-between}
-.win .in{padding:.85rem 1rem 1rem;text-align:center}
-.win .in b{font-weight:400;display:block;margin-bottom:.35rem}
-.win .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
+/* animated illustrations (assets/anim, built by scripts/build-anim.py) */
+.anim{display:block}
+.anim img{display:block;width:100%;height:auto}
+.anim.a{align-self:start;max-width:20rem}
+.anim.r{max-width:46rem;margin:2.5rem auto 0}
+.hero-anim{position:relative;z-index:1;width:min(23rem,100%);text-align:center}
+.hero-anim .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
 .leader{display:flex;gap:.4rem;justify-content:center;align-items:baseline;font-weight:500;font-size:1.05rem;padding:2rem var(--pad) 0}
 .leader{white-space:nowrap;font-size:clamp(.9rem,2.8vw,1.05rem)}
 .leader i{flex:0 1 12rem;min-width:1.5rem;border-bottom:2px dotted currentColor;transform:translateY(-.25rem)}
@@ -63,8 +65,6 @@ nav a.logo img{display:block;height:2.1rem;width:auto}
 .col .mono{display:block;margin-bottom:1.6rem}
 .col p{font-size:clamp(1.15rem,1.6vw,1.45rem);line-height:1.2;max-width:24rem}
 .col.small p{font-size:1.05rem;line-height:1.3}
-.ledger{font:400 .75rem/1.25 var(--mono);word-break:break-all;align-self:start}
-.ledger span{display:block;margin-bottom:.8rem}
 
 /* the terminal: one regulated task, start to sign-off */
 .term{max-width:46rem;margin:0 auto;border:1px solid #555;background:#141414}
