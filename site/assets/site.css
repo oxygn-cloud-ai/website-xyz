@@ -1,7 +1,7 @@
 :root{
   --paper:#FEFEFE; --ink:#1E1E1E; --air:#8DB3FF; --sage:#ABBAB9; --mist:#DEDEDE;
   --grot:"Inter Tight",Helvetica,Arial,sans-serif; --mono:"Fragment Mono",ui-monospace,Menlo,monospace;
-  --pad:clamp(1rem,4vw,6.25rem);
+  --pad:max(clamp(1rem,4vw,6.25rem),calc(50% - 38.75rem)); /* content never wider than 1240px */
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);font:400 1.25rem/1.3 var(--grot);-webkit-font-smoothing:antialiased}
@@ -17,7 +17,7 @@ nav a.logo{display:flex;align-items:center;padding:.4rem .7rem}
 nav a.logo img{display:block;height:2.1rem;width:auto}
 
 /* display type */
-.display{font-weight:500;letter-spacing:-.045em;line-height:.82;font-size:clamp(3.4rem,10.4vw,9.4rem);text-align:center}
+.display{font-weight:500;letter-spacing:-.045em;line-height:.82;font-size:clamp(3.4rem,10.4vw,8.6rem);text-align:center}
 .display.sm{font-size:clamp(2.6rem,6.2vw,5.6rem);line-height:.88}
 
 /* hero */
@@ -131,7 +131,7 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
 .chips li::before{content:"\2723 ";opacity:.7}
 
 /* hero: news windows */
-.news{position:relative;z-index:1;display:grid;gap:1.1rem;width:min(25rem,100%)}
+.news{position:relative;z-index:1;display:grid;gap:1.1rem;width:min(29rem,100%)}
 .news .wi{text-align:center;font:400 .875rem/1.45 var(--mono)}
 .news .wi b{display:block;font-weight:400;margin-bottom:.15rem}
 .news .btn{display:inline-block;margin-top:.8rem;background:var(--ink);color:var(--paper);padding:.5rem 1.4rem;text-decoration:none}
@@ -172,7 +172,7 @@ footer .row{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;
   .os > .board{position:absolute;width:27rem;left:50%;top:8%;margin-left:-13.5rem;z-index:1;box-shadow:.6rem .6rem 0 rgba(30,30,30,.18)}
   .r5{left:5%;bottom:7%;width:14rem}
   .r6{right:3%;bottom:5%;width:13rem}
-  .r7{left:24%;bottom:6%;width:12rem}
+  .r7{left:22.5%;bottom:6%;width:11.5rem}
   .r8{left:50%;bottom:4%;width:20rem;margin-left:-10rem}
   .blob{display:block;position:absolute;border-radius:50%;z-index:0;
     background:radial-gradient(var(--ink) 1.3px,transparent 1.6px) 0 0/5px 5px;

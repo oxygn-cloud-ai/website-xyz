@@ -72,3 +72,7 @@ test('function windows list what each covers (owner edits)', () => {
   assert.doesNotMatch(fn('Compliance'), /KYC/i);
   assert.match(fn('Governance'), /<li>Statutory filings<\/li>/);
 });
+
+test('content sits in a narrow 1240px column, like typesafe.ai (backgrounds stay full width)', () => {
+  assert.match(css, /--pad:max\(clamp\([^)]*\),calc\(50% - 38\.75rem\)\)/);
+});
