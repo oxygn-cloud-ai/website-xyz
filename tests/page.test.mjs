@@ -66,3 +66,9 @@ test('the enquiry form is untouched', () => {
     assert.match(html, new RegExp(`name="${n}"`));
   }
 });
+
+test('function windows list what each covers (owner edits)', () => {
+  const fn = (name) => html.match(new RegExp(`<span>${name}</span>[\\s\\S]*?</ul>`))?.[0] ?? '';
+  assert.doesNotMatch(fn('Compliance'), /KYC/i);
+  assert.match(fn('Governance'), /<li>Statutory filings<\/li>/);
+});
