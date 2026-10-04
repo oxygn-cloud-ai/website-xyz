@@ -85,3 +85,9 @@ test('the legal function is called "legal operations" everywhere', () => {
 test('the registers FAQ no longer details the review queue (owner edit)', () => {
   assert.ok(!html.includes('167 are waiting for review. One has been accepted'), 'sentence still present');
 });
+
+test('popup placeholders use yourdomain.com, not yourbank.com (owner edit)', () => {
+  assert.ok(!html.includes('yourbank'), 'yourbank still present');
+  assert.match(html, /placeholder="ada@yourdomain\.com"/);
+  assert.match(html, /placeholder="yourdomain\.com"/);
+});
