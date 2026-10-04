@@ -76,3 +76,8 @@ test('function windows list what each covers (owner edits)', () => {
 test('content sits in a narrow 1240px column, like typesafe.ai (backgrounds stay full width)', () => {
   assert.match(css, /--pad:max\(clamp\([^)]*\),calc\(50% - 38\.75rem\)\)/);
 });
+
+test('the legal function is called "legal operations" everywhere', () => {
+  assert.match(html, /<span>Legal operations<\/span>/);
+  assert.doesNotMatch(html, /\blegal\b(?! operations)/i);
+});
