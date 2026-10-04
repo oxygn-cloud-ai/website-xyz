@@ -81,3 +81,7 @@ test('the legal function is called "legal operations" everywhere', () => {
   assert.match(html, /<span>Legal operations<\/span>/);
   assert.doesNotMatch(html, /\blegal\b(?! operations)/i);
 });
+
+test('the registers FAQ no longer details the review queue (owner edit)', () => {
+  assert.ok(!html.includes('167 are waiting for review. One has been accepted'), 'sentence still present');
+});
